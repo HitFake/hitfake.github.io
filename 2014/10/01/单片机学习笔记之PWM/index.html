@@ -1,0 +1,383 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  
+  <title>单片机学习笔记之PWM | 曲线救国</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+  <meta name="description" content="简介
+PWM简称脉冲宽度调制,作用是将数字输出波形转换程等效的模拟波形.优点是从处理器到被控系统信号都是数字形式,无需进行数模转换  
+原理
+在不改变脉冲方波周期的前提下,通过调整其每个周期脉冲方波占空比,从而达到等效模拟电压输出的目的. 
+占空比:高电平在一个周期内所占的比率
+控制小灯亮度渐变示例
+#include&lt;reg51.h&gt;
+#define uint unsigned int">
+<meta property="og:type" content="article">
+<meta property="og:title" content="单片机学习笔记之PWM">
+<meta property="og:url" content="https://hitfake.github.io/2014/10/01/单片机学习笔记之PWM/">
+<meta property="og:site_name" content="曲线救国">
+<meta property="og:description" content="简介
+PWM简称脉冲宽度调制,作用是将数字输出波形转换程等效的模拟波形.优点是从处理器到被控系统信号都是数字形式,无需进行数模转换  
+原理
+在不改变脉冲方波周期的前提下,通过调整其每个周期脉冲方波占空比,从而达到等效模拟电压输出的目的. 
+占空比:高电平在一个周期内所占的比率
+控制小灯亮度渐变示例
+#include&lt;reg51.h&gt;
+#define uint unsigned int">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="单片机学习笔记之PWM">
+<meta name="twitter:description" content="简介
+PWM简称脉冲宽度调制,作用是将数字输出波形转换程等效的模拟波形.优点是从处理器到被控系统信号都是数字形式,无需进行数模转换  
+原理
+在不改变脉冲方波周期的前提下,通过调整其每个周期脉冲方波占空比,从而达到等效模拟电压输出的目的. 
+占空比:高电平在一个周期内所占的比率
+控制小灯亮度渐变示例
+#include&lt;reg51.h&gt;
+#define uint unsigned int">
+
+  
+    <link rel="alternative" href="/atom.xml" title="曲线救国" type="application/atom+xml">
+  
+  
+    <link rel="icon" href="/favicon.png">
+  
+  <link href="//fonts.googleapis.com/css?family=Source+Code+Pro" rel="stylesheet" type="text/css">
+  <link rel="stylesheet" href="/css/style.css" type="text/css">
+
+  
+
+</head>
+<body>
+  <div id="container">
+    <div id="wrap">
+      <header id="header">
+  <div id="banner"></div>
+  <div id="header-outer" class="outer">
+    <div id="header-title" class="inner">
+      <h1 id="logo-wrap">
+        <a href="/" id="logo">曲线救国</a>
+      </h1>
+      
+        <h2 id="subtitle-wrap">
+          <a href="/" id="subtitle">该站主要用于存放学习笔记,主要工作与图片分享站,可访问:hitfake.com</a>
+        </h2>
+      
+    </div>
+    <div id="header-inner" class="inner">
+      <nav id="main-nav">
+        <a id="main-nav-toggle" class="nav-icon"></a>
+        
+          <a class="main-nav-link" href="/">Home</a>
+        
+          <a class="main-nav-link" href="/archives">Archives</a>
+        
+      </nav>
+      <nav id="sub-nav">
+        
+          <a id="nav-rss-link" class="nav-icon" href="/atom.xml" title="RSS Feed"></a>
+        
+        <a id="nav-search-btn" class="nav-icon" title="Search"></a>
+      </nav>
+      <div id="search-form-wrap">
+        <form action="//google.com/search" method="get" accept-charset="UTF-8" class="search-form"><input type="search" name="q" results="0" class="search-form-input" placeholder="Search"><input type="submit" value="&#xF002;" class="search-form-submit"><input type="hidden" name="q" value="site:https://hitfake.github.io"></form>
+      </div>
+    </div>
+  </div>
+</header>
+      <div class="outer">
+        <section id="main"><article id="post-单片机学习笔记之PWM" class="article article-type-post" itemscope itemprop="blogPost">
+  <div class="article-meta">
+    <a href="/2014/10/01/单片机学习笔记之PWM/" class="article-date">
+  <time datetime="2014-10-01T10:05:37.000Z" itemprop="datePublished">10月 1 2014</time>
+</a>
+    
+  </div>
+  <div class="article-inner">
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 class="article-title" itemprop="name">
+      单片机学习笔记之PWM
+    </h1>
+  
+
+      </header>
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <h5 id="简介">简介</h5>
+<p>PWM简称脉冲宽度调制,作用是将数字输出波形转换程等效的模拟波形.<br>优点是从处理器到被控系统信号都是数字形式,无需进行数模转换  </p>
+<h5 id="原理">原理</h5>
+<p>在不改变脉冲方波周期的前提下,通过调整其每个周期脉冲方波占空比,从而达到等效模拟电压输出的目的. </p>
+<h6 id="占空比:高电平在一个周期内所占的比率">占空比:高电平在一个周期内所占的比率</h6>
+<h5 id="控制小灯亮度渐变示例">控制小灯亮度渐变示例</h5>
+<pre><code><span class="preprocessor">#include&lt;reg51.h&gt;</span>
+<span class="preprocessor">#define uint unsigned int </span>
+<span class="preprocessor">#define uchar unsigned char  </span>
+sbit pwm=P0^<span class="number">0</span>;
+<span class="keyword">uint</span> cycle,high,low     <span class="comment">//脉冲周期,高电平时间,低电平时间  </span>
+
+<span class="keyword">void</span> delay(<span class="keyword">uint</span> t)
+{
+    <span class="keyword">while</span>(t--);
+}
+<span class="keyword">void</span> main()
+{
+    cycle=<span class="number">800</span>;
+    <span class="keyword">while</span>(<span class="number">1</span>)
+    {   
+        <span class="keyword">for</span>(high=<span class="number">1</span>;high&lt;=cycle;high++)
+        {
+            pwm=<span class="number">1</span>;
+            delay(high);
+            pwm=<span class="number">0</span>;
+            delay(cycle-high);
+        }
+        high=<span class="number">1</span>;
+        delay(<span class="number">60000</span>);
+    }
+}  
+</code></pre><h4 id="PWM直流电机调速">PWM直流电机调速</h4>
+<p>设计直流电机调速方案是,首先要考虑PWM方波的频率.直流小电机是一个感性的负载,电感对电流的突变有抑制作用.<br>若方波频率过高,会使电感一直作用过于明显,造成小电机的驱动能力不足.<br>   T=1/f<br>设定方波频率从为16Hz,PWM周期即为16ms<br>在程序上,我们把每一个脉冲看成是均匀分布的32份高低电平.那么每份对应的时间即为0.5ms(用定时器T0产生),并定义一个变量PWM来计算定时器中断次数<br>比如:我们先中断8次,在8次时间内,让PWM控制I/O口输出高电平.9~32次输出低电平,就得到了一个周期为16ms的脉冲波形  </p>
+<h3 id="示例">示例</h3>
+<pre><code><span class="comment">#include&lt;reg51.h&gt;</span>
+<span class="comment">#define uint unsigned int </span>
+<span class="comment">#define uchar unsigned char  </span>
+<span class="comment">/*设计成按S2让PWM增加,S3减小*/</span>
+sbit <span class="variable">S2=</span>P3^<span class="number">4</span>;    
+sbit <span class="variable">S3=</span>P3^<span class="number">5</span>;
+sbit <span class="variable">fm=</span>P2^<span class="number">3</span>;
+
+uchar pwm,num;
+void delay(uint ms)
+{
+    ucahr i;
+    while(ms--)
+    {
+        for(<span class="variable">i=</span><span class="number">0</span>;i&lt;<span class="number">120</span>;i++);
+    }
+}
+
+void bee()
+{
+    <span class="variable">fm=</span><span class="number">0</span>;
+    delay(<span class="number">100</span>);
+    <span class="variable">fm=</span><span class="number">1</span>;
+}
+
+void keyscan()        //按键扫描
+{
+    <span class="keyword">if</span>(<span class="variable">S2=</span>=<span class="number">0</span>)
+    {
+        delay(<span class="number">50</span>);
+        <span class="keyword">if</span>(<span class="variable">S2=</span><span class="number">0</span>)
+        {
+            <span class="keyword">if</span>(pwm&lt;<span class="number">32</span>)
+            {
+                pwm++;
+                dealy(<span class="number">100</span>);
+            }
+            <span class="keyword">else</span>
+            {
+                bee();
+            }
+        }
+    }
+
+    <span class="keyword">if</span>(<span class="variable">S3=</span>=<span class="number">0</span>)
+    {
+        delay(<span class="number">50</span>);
+        <span class="keyword">if</span>(<span class="variable">S3=</span><span class="number">0</span>)
+        {
+            <span class="keyword">if</span>(pwm&gt;<span class="number">1</span>)
+            {
+                pwm++;
+                dealy(<span class="number">100</span>);
+            }
+            <span class="keyword">else</span>
+            {
+                bee();
+            }
+        }
+    }
+}
+void init_t0
+{
+    <span class="variable">TMOD=</span><span class="number">0</span>x01;
+    <span class="variable">TH0=</span>(<span class="number">655536</span>-<span class="number">500</span>)/<span class="number">256</span>;
+    <span class="variable">TL0=</span>(<span class="number">65536</span>-<span class="number">500</span>)%<span class="number">256</span>;
+    <span class="variable">EA=</span><span class="number">1</span>;
+    <span class="variable">ET=</span><span class="number">1</span>;
+    <span class="variable">TR0=</span><span class="number">1</span>;
+}
+
+void t0() interpuut <span class="number">1</span>
+{
+    <span class="variable">TR0=</span><span class="number">0</span>;
+    <span class="variable">TH0=</span>(<span class="number">655536</span>-<span class="number">500</span>)/<span class="number">256</span>;
+    <span class="variable">TL0=</span>(<span class="number">65536</span>-<span class="number">500</span>)%<span class="number">256</span>;
+    num++;
+    <span class="keyword">if</span>(num&gt;<span class="number">32</span>)
+    {
+        <span class="variable">num=</span><span class="number">0</span>;
+    }
+    <span class="keyword">if</span>(num&lt;=pwm)
+    {
+        <span class="variable">P1=</span><span class="number">0</span>x0f;
+    }
+    <span class="keyword">else</span>
+    {
+        <span class="variable">P1=</span><span class="number">0</span>x00;
+    }
+    <span class="variable">TR0=</span><span class="number">1</span>;
+}
+
+void main()
+{
+    init_t0();
+    <span class="variable">num=</span><span class="number">0</span>;
+    <span class="variable">pwm=</span><span class="number">16</span>;
+    while(<span class="number">1</span>)
+    {
+        keyscan();
+    }
+}
+</code></pre>
+      
+    </div>
+    <footer class="article-footer">
+      <a data-url="https://hitfake.github.io/2014/10/01/单片机学习笔记之PWM/" data-id="tdkw699r27bp99sh" class="article-share-link">Share</a>
+      
+      
+  <ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/单片机/">单片机</a></li></ul>
+
+    </footer>
+  </div>
+  
+    
+<nav id="article-nav">
+  
+    <a href="/2014/10/01/单片机学习笔记之交通灯/" id="article-nav-newer" class="article-nav-link-wrap">
+      <strong class="article-nav-caption">Newer</strong>
+      <div class="article-nav-title">
+        
+          单片机学习笔记之交通灯
+        
+      </div>
+    </a>
+  
+  
+    <a href="/2014/10/01/单片机学习笔记之DA/" id="article-nav-older" class="article-nav-link-wrap">
+      <strong class="article-nav-caption">Older</strong>
+      <div class="article-nav-title">单片机学习笔记之DA</div>
+    </a>
+  
+</nav>
+
+  
+</article>
+
+</section>
+        
+          <aside id="sidebar">
+  
+    
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">Tags</h3>
+    <div class="widget">
+      <ul class="tag-list"><li class="tag-list-item"><a class="tag-list-link" href="/tags/BLOG/">BLOG</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/blog/">blog</a><span class="tag-list-count">5</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/ios开发/">ios开发</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/单片机/">单片机</a><span class="tag-list-count">20</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/嵌入式/">嵌入式</a><span class="tag-list-count">2</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/数据结构和算法/">数据结构和算法</a><span class="tag-list-count">2</span></li></ul>
+    </div>
+  </div>
+
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">Tag Cloud</h3>
+    <div class="widget tagcloud">
+      <a href="/tags/BLOG/" style="font-size: 10.00px;">BLOG</a><a href="/tags/blog/" style="font-size: 16.67px;">blog</a><a href="/tags/ios开发/" style="font-size: 10.00px;">ios开发</a><a href="/tags/单片机/" style="font-size: 20.00px;">单片机</a><a href="/tags/嵌入式/" style="font-size: 13.33px;">嵌入式</a><a href="/tags/数据结构和算法/" style="font-size: 13.33px;">数据结构和算法</a>
+    </div>
+  </div>
+
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">Archives</h3>
+    <div class="widget">
+      <ul class="archive-list"><li class="archive-list-item"><a class="archive-list-link" href="/archives/2014/10/">October 2014</a><span class="archive-list-count">32</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2014/09/">September 2014</a><span class="archive-list-count">1</span></li></ul>
+    </div>
+  </div>
+
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">Recents</h3>
+    <div class="widget">
+      <ul>
+        
+          <li>
+            <a href="/2014/10/01/单片机学习笔记之步进电机/">单片机学习笔记之步进电机</a>
+          </li>
+        
+          <li>
+            <a href="/2014/10/01/单片机学习笔记之矩阵键盘/">单片机学习笔记之矩阵键盘</a>
+          </li>
+        
+          <li>
+            <a href="/2014/10/01/超声波模块之HC-SR04 /">超声波模块之HC-SR04</a>
+          </li>
+        
+          <li>
+            <a href="/2014/10/01/动态数码管(二) -- 数码管流水灯(不用译码器)/">动态数码管(二) -- 数码管流水等(不用译码器)</a>
+          </li>
+        
+          <li>
+            <a href="/2014/10/01/单片机学习笔记之LCD/">单片机学习笔记之LCD</a>
+          </li>
+        
+      </ul>
+    </div>
+  </div>
+
+  
+</aside>
+        
+      </div>
+      <footer id="footer">
+  
+  <div class="outer">
+    <div id="footer-info" class="inner">
+      &copy; 2014 kench<br>
+      Powered by <a href="http://hexo.io/" target="_blank">Hexo</a>
+    </div>
+  </div>
+</footer>
+    </div>
+    <nav id="mobile-nav">
+  
+    <a href="/" class="mobile-nav-link">Home</a>
+  
+    <a href="/archives" class="mobile-nav-link">Archives</a>
+  
+</nav>
+    
+
+<script src="//ajax.googleapis.com/ajax/libs/jquery/2.0.3/jquery.min.js"></script>
+
+
+  <link rel="stylesheet" href="/fancybox/jquery.fancybox.css" type="text/css">
+
+  <script src="/fancybox/jquery.fancybox.pack.js" type="text/javascript"></script>
+
+
+
+<script src="/js/script.js" type="text/javascript"></script>
+
+
+  </div>
+</body>
+</html>

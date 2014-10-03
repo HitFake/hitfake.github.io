@@ -1,18 +1,952 @@
-<%- partial('_partial/head') %>
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  
+  <title>曲线救国</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+  <meta name="description">
+<meta property="og:type" content="website">
+<meta property="og:title" content="曲线救国">
+<meta property="og:url" content="https://hitfake.github.io/">
+<meta property="og:site_name" content="曲线救国">
+<meta property="og:description">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="曲线救国">
+<meta name="twitter:description">
+
+  
+    <link rel="alternative" href="/atom.xml" title="曲线救国" type="application/atom+xml">
+  
+  
+    <link rel="icon" href="/favicon.png">
+  
+  <link href="//fonts.googleapis.com/css?family=Source+Code+Pro" rel="stylesheet" type="text/css">
+  <link rel="stylesheet" href="/css/style.css" type="text/css">
+
+  
+
+</head>
 <body>
   <div id="container">
     <div id="wrap">
-      <%- partial('_partial/header', null, {cache: !config.relative_link}) %>
-      <div class="outer">
-        <section id="main"><%- body %></section>
-        <% if (theme.sidebar && theme.sidebar !== 'bottom'){ %>
-          <%- partial('_partial/sidebar', null, {cache: !config.relative_link}) %>
-        <% } %>
-      </div>
-      <%- partial('_partial/footer', null, {cache: !config.relative_link}) %>
+      <header id="header">
+  <div id="banner"></div>
+  <div id="header-outer" class="outer">
+    <div id="header-title" class="inner">
+      <h1 id="logo-wrap">
+        <a href="/" id="logo">曲线救国</a>
+      </h1>
+      
+        <h2 id="subtitle-wrap">
+          <a href="/" id="subtitle">该站主要用于存放学习笔记,主要工作与图片分享站,可访问:hitfake.com</a>
+        </h2>
+      
     </div>
-    <%- partial('_partial/mobile-nav', null, {cache: !config.relative_link}) %>
-    <%- partial('_partial/after-footer') %>
+    <div id="header-inner" class="inner">
+      <nav id="main-nav">
+        <a id="main-nav-toggle" class="nav-icon"></a>
+        
+          <a class="main-nav-link" href="/">Home</a>
+        
+          <a class="main-nav-link" href="/archives">Archives</a>
+        
+      </nav>
+      <nav id="sub-nav">
+        
+          <a id="nav-rss-link" class="nav-icon" href="/atom.xml" title="RSS Feed"></a>
+        
+        <a id="nav-search-btn" class="nav-icon" title="Search"></a>
+      </nav>
+      <div id="search-form-wrap">
+        <form action="//google.com/search" method="get" accept-charset="UTF-8" class="search-form"><input type="search" name="q" results="0" class="search-form-input" placeholder="Search"><input type="submit" value="&#xF002;" class="search-form-submit"><input type="hidden" name="q" value="site:https://hitfake.github.io"></form>
+      </div>
+    </div>
+  </div>
+</header>
+      <div class="outer">
+        <section id="main">
+  
+    <article id="post-单片机学习笔记之步进电机" class="article article-type-post" itemscope itemprop="blogPost">
+  <div class="article-meta">
+    <a href="/2014/10/01/单片机学习笔记之步进电机/" class="article-date">
+  <time datetime="2014-10-01T10:05:37.000Z" itemprop="datePublished">10月 1 2014</time>
+</a>
+    
+  </div>
+  <div class="article-inner">
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 itemprop="name">
+      <a class="article-title" href="/2014/10/01/单片机学习笔记之步进电机/">单片机学习笔记之步进电机</a>
+    </h1>
+  
+
+      </header>
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <h3 id="概念:将电脉冲转化为角位移">概念:将电脉冲转化为角位移</h3>
+<h3 id="型号解读:例28BYJ-48">型号解读:例28BYJ-48</h3>
+<pre><code><span class="comment">28</span>    <span class="literal">-</span><span class="literal">-</span>    <span class="comment">步进电机有效的最大外径为28mm</span>  
+<span class="comment">B</span>    <span class="literal">-</span><span class="literal">-</span>    <span class="comment">表示步进电机</span>  
+<span class="comment">Y</span>    <span class="literal">-</span><span class="literal">-</span>    <span class="comment">表示永磁型(还有反应式和混合式)</span>
+<span class="comment">J</span>    <span class="literal">-</span><span class="literal">-</span>    <span class="comment">表示减速型(输出轴以多个</span><span class="title">[</span><span class="comment">小</span><span class="title">]</span><span class="comment">齿轮带动</span><span class="title">[</span><span class="comment">大</span><span class="title">]</span><span class="comment">齿轮</span><span class="string">,</span><span class="comment">转速慢但扭力大)</span>  
+<span class="comment">48</span>    <span class="literal">-</span><span class="literal">-</span>    <span class="comment">表示四相(4对激磁性线圈</span><span class="string">,</span><span class="comment">分别以ABCD表示)八拍(A</span><span class="literal">-</span><span class="comment">AB</span><span class="literal">-</span><span class="comment">B</span><span class="literal">-</span><span class="comment">BC</span><span class="literal">-</span><span class="comment">C</span><span class="literal">-</span><span class="comment">CD</span><span class="literal">-</span><span class="comment">D</span><span class="literal">-</span><span class="comment">DA)</span> 
+</code></pre><ul>
+<li>相数:激磁线圈对数,每对引出一根控制线,一端开关接地,另一端共接VCC—-4相5线(4相6线为每2相共用1根电源线)</li>
+<li>拍数:完成一个磁场周期性变化所需的脉冲数<br>  单相4拍:A-B-C-D<br>  双相4拍AB-BC-CD-DA    </li>
+</ul>
+<h3 id="单极性步进电机的节拍(5线3为例)">单极性步进电机的节拍(5线3为例)</h3>
+<pre><code>单四拍<span class="symbol">:</span>    <span class="constant">A</span>-<span class="constant">B</span>-<span class="constant">C</span>-<span class="constant">D</span>  
+双四拍<span class="symbol">:</span>    <span class="constant">AB</span>-<span class="constant">BC</span>-<span class="constant">CD</span>-<span class="constant">DA</span>
+单双四拍<span class="symbol">:A-AB-B-BC-C-CD-D-DA</span>(半步工作方式)  
+</code></pre><h3 id="双极性步进电机的节拍(4线2相为例)">双极性步进电机的节拍(4线2相为例)</h3>
+<pre><code><span class="label">单四拍:</span>    <span class="literal">A</span>/ - B - <span class="literal">A</span> - B/  
+<span class="label">双四拍:</span>    <span class="literal">A</span>/B - AB - AB/ - <span class="literal">A</span>/B/  
+<span class="label">单双8拍:</span>    <span class="literal">A</span>/    <span class="literal">A</span>/B    B    AB    <span class="literal">A</span>    AB/    B/    <span class="literal">A</span>/B/
+</code></pre><h4 id="步进角:_步进电机定子绕组每改变一次通电状态0,转子转过的角度">步进角: 步进电机定子绕组每改变一次通电状态0,转子转过的角度</h4>
+<pre><code>=<span class="ruby"><span class="number">360</span>/定子相数*转子磁极对数*通电方式  
+</span>    通电方式C--=1,单相轮流通电or双向轮流通电  
+            -<span class="ruby">-=<span class="number">2</span>单\双相轮流通电</span>
+</code></pre><h5 id="未工作到的IO口可任意置0或1,然后写出步进电机相序表">未工作到的IO口可任意置0或1,然后写出步进电机相序表</h5>
+<pre><code><span class="attribute">如:单双8拍.高位-&gt;低位</span>=<span class="string">DCBA  
+    拍A:0001;拍AB:0011  </span>
+</code></pre><p><strong>亦可直接查看相应的电机手册</strong></p>
+<h4 id="专业步进电机驱动芯片介绍(UDN2619)">专业步进电机驱动芯片介绍(UDN2619)</h4>
+<pre><code>PHASE1/2    控制电流方向  
+IO/I1        控制电流输出大小  
+</code></pre><h2 id="例程">例程</h2>
+<pre><code>/<span class="keyword">*</span><span class="keyword">*</span><span class="keyword">*</span><span class="keyword">*</span><span class="keyword">*</span><span class="keyword">*</span><span class="keyword">*</span><span class="keyword">*</span><span class="keyword">*</span><span class="keyword">*</span><span class="keyword">*</span><span class="keyword">*</span><span class="keyword">*</span><span class="keyword">*</span><span class="keyword">*</span><span class="keyword">*</span><span class="keyword">*</span><span class="keyword">*</span><span class="keyword">*</span><span class="keyword">*</span><span class="keyword">*</span><span class="keyword">*</span><span class="keyword">*</span><span class="keyword">*</span><span class="keyword">*</span><span class="keyword">*</span><span class="keyword">*</span><span class="keyword">*</span><span class="keyword">*</span><span class="keyword">*</span><span class="keyword">*</span><span class="keyword">*</span><span class="keyword">*</span><span class="keyword">*</span><span class="keyword">*</span><span class="keyword">*</span><span class="keyword">*</span><span class="keyword">*</span><span class="keyword">*</span><span class="keyword">*</span><span class="keyword">*</span><span class="keyword">*</span><span class="keyword">*</span><span class="keyword">*</span><span class="keyword">*</span><span class="keyword">*</span><span class="keyword">*</span><span class="keyword">*</span><span class="keyword">*</span><span class="keyword">*</span><span class="keyword">*</span><span class="keyword">*</span><span class="keyword">*</span><span class="keyword">*</span><span class="keyword">*</span><span class="keyword">*</span><span class="keyword">*</span><span class="keyword">*</span><span class="keyword">*</span><span class="keyword">*</span><span class="keyword">*</span><span class="keyword">*</span><span class="keyword">*</span><span class="keyword">*</span><span class="keyword">*</span><span class="keyword">*</span><span class="keyword">*</span><span class="keyword">*</span><span class="keyword">*</span><span class="keyword">*</span><span class="keyword">*</span><span class="keyword">*</span><span class="keyword">*</span><span class="keyword">*</span><span class="keyword">*</span><span class="keyword">*</span><span class="keyword">*</span><span class="keyword">*</span><span class="keyword">*</span><span class="keyword">*</span><span class="keyword">*</span><span class="keyword">*</span><span class="keyword">*</span><span class="keyword">*</span><span class="keyword">*</span>
+<span class="keyword">*</span> 正转：A/  A/B  B  AB  A  AB/  B/  A/B/
+<span class="keyword">*</span> 反转：A/B/  B/  AB/  A  AB  B  A/B  A/                                    
+<span class="keyword">*</span> 
+<span class="keyword">*</span> UDN2916电流控制真值表：
+<span class="keyword">*</span>     I0        I1         输出电流
+<span class="keyword">*</span>      L        L          最大
+<span class="keyword">*</span>      H        L          最大<span class="keyword">*</span>2/3
+<span class="keyword">*</span>      L        H          最大<span class="keyword">*</span>1/3
+<span class="keyword">*</span> H H 0     <span class="keyword">*</span>           <span class="keyword">*</span>
+   J14短路冒需断开                                <span class="keyword">*</span>
+<span class="keyword">*</span><span class="keyword">*</span><span class="keyword">*</span><span class="keyword">*</span><span class="keyword">*</span><span class="keyword">*</span><span class="keyword">*</span><span class="keyword">*</span><span class="keyword">*</span><span class="keyword">*</span><span class="keyword">*</span><span class="keyword">*</span><span class="keyword">*</span><span class="keyword">*</span><span class="keyword">*</span><span class="keyword">*</span><span class="keyword">*</span><span class="keyword">*</span><span class="keyword">*</span><span class="keyword">*</span><span class="keyword">*</span><span class="keyword">*</span><span class="keyword">*</span><span class="keyword">*</span><span class="keyword">*</span><span class="keyword">*</span><span class="keyword">*</span><span class="keyword">*</span><span class="keyword">*</span><span class="keyword">*</span><span class="keyword">*</span><span class="keyword">*</span><span class="keyword">*</span><span class="keyword">*</span><span class="keyword">*</span><span class="keyword">*</span><span class="keyword">*</span><span class="keyword">*</span><span class="keyword">*</span><span class="keyword">*</span><span class="keyword">*</span><span class="keyword">*</span><span class="keyword">*</span><span class="keyword">*</span><span class="keyword">*</span><span class="keyword">*</span><span class="keyword">*</span><span class="keyword">*</span><span class="keyword">*</span><span class="keyword">*</span><span class="keyword">*</span><span class="keyword">*</span><span class="keyword">*</span><span class="keyword">*</span><span class="keyword">*</span><span class="keyword">*</span><span class="keyword">*</span><span class="keyword">*</span><span class="keyword">*</span><span class="keyword">*</span><span class="keyword">*</span><span class="keyword">*</span><span class="keyword">*</span><span class="keyword">*</span><span class="keyword">*</span><span class="keyword">*</span><span class="keyword">*</span><span class="keyword">*</span><span class="keyword">*</span><span class="keyword">*</span><span class="keyword">*</span><span class="keyword">*</span><span class="keyword">*</span><span class="keyword">*</span><span class="keyword">*</span><span class="keyword">*</span><span class="keyword">*</span><span class="keyword">*</span><span class="keyword">*</span><span class="keyword">*</span><span class="keyword">*</span><span class="keyword">*</span><span class="keyword">*</span><span class="keyword">*</span><span class="keyword">*</span><span class="keyword">*</span>/  
+<span class="comment">#include "reg51.h"</span>
+
+<span class="comment">#define speed 2</span>
+ //Motor
+sbit PH1 = P1^0;      //定义管脚
+sbit PH2 = P1^1;
+sbit I01 = P1^2;
+sbit I11 = P1^3;
+sbit IO2 = P1^4;
+sbit I12 = P1^5;
+
+
+
+void delay(int time);
+
+/<span class="keyword">*</span><span class="keyword">*</span><span class="keyword">*</span><span class="keyword">*</span><span class="keyword">*</span><span class="keyword">*</span><span class="keyword">*</span><span class="keyword">*</span><span class="keyword">*</span><span class="keyword">*</span><span class="keyword">*</span><span class="keyword">*</span><span class="keyword">*</span><span class="keyword">*</span><span class="keyword">*</span><span class="keyword">*</span><span class="keyword">*</span><span class="keyword">*</span><span class="keyword">*</span><span class="keyword">*</span><span class="keyword">*</span><span class="keyword">*</span><span class="keyword">*</span><span class="keyword">*</span><span class="keyword">*</span><span class="keyword">*</span><span class="keyword">*</span><span class="keyword">*</span><span class="keyword">*</span><span class="keyword">*</span><span class="keyword">*</span><span class="keyword">*</span><span class="keyword">*</span><span class="keyword">*</span><span class="keyword">*</span><span class="keyword">*</span><span class="keyword">*</span><span class="keyword">*</span><span class="keyword">*</span>
+函数功能：产生脉冲控制步进机
+正转：A/  A/B  B  AB  A  AB/  B/  A/B/
+I0 I1 均为0 以最大电流输出（没有四分） 均为1不输出电流
+<span class="keyword">*</span><span class="keyword">*</span><span class="keyword">*</span><span class="keyword">*</span><span class="keyword">*</span><span class="keyword">*</span><span class="keyword">*</span><span class="keyword">*</span><span class="keyword">*</span><span class="keyword">*</span><span class="keyword">*</span><span class="keyword">*</span><span class="keyword">*</span><span class="keyword">*</span><span class="keyword">*</span><span class="keyword">*</span><span class="keyword">*</span><span class="keyword">*</span><span class="keyword">*</span><span class="keyword">*</span><span class="keyword">*</span><span class="keyword">*</span><span class="keyword">*</span><span class="keyword">*</span><span class="keyword">*</span><span class="keyword">*</span><span class="keyword">*</span><span class="keyword">*</span><span class="keyword">*</span><span class="keyword">*</span><span class="keyword">*</span><span class="keyword">*</span><span class="keyword">*</span><span class="keyword">*</span><span class="keyword">*</span><span class="keyword">*</span><span class="keyword">*</span><span class="keyword">*</span>/
+void Go()
+{     
+    //A/  A拍反向电流
+    PH1 = 0;     //PH1为0 A组线圈为反向电流
+I01 = 0;
+    I11 = 0;     //以最大电流输出（没细分） 以下相同 均是此意思
+
+
+    PH2 = 1; //PH2为1 B组线圈为正向电流
+    I02 = 1;
+    I12 = 1; //关闭电流输出，以下相同均是此意思
+
+
+
+    delay(speed);
+
+     // A/B  AB拍 A为反向电流  B为正向电流
+PH1 = 0; //PH1为0 A组线圈为反向电流
+I01 = 0;
+    I11 = 0;
+
+
+    PH2 = 1; //PH2为1 B组线圈为正向电流
+    I02 = 0;
+    I12 = 0;
+
+
+
+
+    delay(speed);
+    //B      B拍 B为正向电流
+    PH1 = 1;  
+       I01 = 1;
+    I11 = 1;
+
+     PH2 = 1;
+    I02 = 0;
+    I12 = 0;
+
+    delay(speed);
+    //AB   AB拍 均为正向电流
+    PH1 = 1;
+    I01 = 0;
+    I11 = 0;
+
+
+    PH2 = 1;  
+    I02 = 0;
+    I12 = 0;
+       delay(speed);
+    //A
+    PH1 = 1;
+    I01 = 0;
+    I11 = 0;
+
+    PH2 = 0; 
+    I02 = 1;
+    I12 = 1;
+
+    delay(speed);
+    //AB/
+    PH1 = 1;
+    I01 = 0;
+    I11 = 0;
+
+
+    PH2 = 0;  
+    I02 = 0;
+    I12 = 0;
+
+    delay(speed);
+    //  B/
+    PH1 = 0;
+    I01 = 1;
+    I11 = 1;
+
+
+PH2 = 0; 
+    I02 = 0;
+    I12 = 0;
+
+    delay(speed);
+    //   A/B/
+    PH1 = 0;
+I01 = 0;
+    I11 = 0;
+
+
+    PH2 = 0; 
+    I02 = 0;
+    I12 = 0;
+
+    delay(speed);
+
+}
+
+void delay(int time)
+{ 
+  int i,j;
+
+  for(j=0; j <span class="variable">&lt;= time; j++)
+   for(i =0 ; i &lt;= 70; i++);
+}
+
+void main()
+{
+
+  while(1)
+  {
+
+Go();  //步进电机运行
+
+  }
+
+}</span>
+</code></pre>
+      
+    </div>
+    <footer class="article-footer">
+      <a data-url="https://hitfake.github.io/2014/10/01/单片机学习笔记之步进电机/" data-id="x7f35rod6sssyxep" class="article-share-link">Share</a>
+      
+      
+  <ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/单片机/">单片机</a></li></ul>
+
+    </footer>
+  </div>
+  
+</article>
+
+
+  
+    <article id="post-单片机学习笔记之矩阵键盘" class="article article-type-post" itemscope itemprop="blogPost">
+  <div class="article-meta">
+    <a href="/2014/10/01/单片机学习笔记之矩阵键盘/" class="article-date">
+  <time datetime="2014-10-01T10:05:37.000Z" itemprop="datePublished">10月 1 2014</time>
+</a>
+    
+  </div>
+  <div class="article-inner">
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 itemprop="name">
+      <a class="article-title" href="/2014/10/01/单片机学习笔记之矩阵键盘/">单片机学习笔记之矩阵键盘</a>
+    </h1>
+  
+
+      </header>
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <h2 id="检测原理">检测原理</h2>
+<pre><code>与独立键盘一样,都是检测低电平.  
+但不同的是矩阵键盘行列都接IO口,无固定接地,所以低电平需要我们写程序给它.  
+</code></pre><h2 id="方法"><strong>方法</strong></h2>
+<p><strong>方法一逐行扫描：</strong><br>    高四位(P17~14,根据开发板不同可能有变化)轮流输出低电平，当低四位接收到的数据不全为1的时候，说明有按键按下，然后通过接收到的数据是哪一位为0来判断是哪一个按键被按下。<br><strong>例如:</strong>给P1.7写0,1.6-1.4写1,检测P1.3-1.0.<br>  如果K1被按下,那么检测到的数即为0111(P1.3为0)<br>  如果K2被按下,那么检测到的数即为1011(P1.2为0)<br>  如果未检测到低电平,那么将高4为写入1011(第二高位写0)….以此类推<br>  无论何时检测到键被按下则跳出整个大循环,退出扫描程序  </p>
+<h3 id="例程:"><strong>例程:</strong></h3>
+<p>—  </p>
+<pre><code><span class="preprocessor">#<span class="keyword">include</span>&lt;reg51.h&gt;</span>
+<span class="preprocessor">#<span class="keyword">include</span>&lt;intrins.h&gt;    </span>
+<span class="preprocessor">#<span class="keyword">define</span> uchar unsigned char</span>
+<span class="preprocessor">#<span class="keyword">define</span> uint unsigned int</span>
+<span class="preprocessor">#<span class="keyword">define</span> DIG P0        </span>
+<span class="preprocessor">#<span class="keyword">define</span> KEY P1</span>
+
+
+uchar code DIG_CODE[<span class="number">17</span>]={
+<span class="number">0x3f</span>,<span class="number">0x06</span>,<span class="number">0x5b</span>,<span class="number">0x4f</span>,<span class="number">0x66</span>,<span class="number">0x6d</span>,<span class="number">0x7d</span>,<span class="number">0x07</span>,
+<span class="number">0x7f</span>,<span class="number">0x6f</span>,<span class="number">0x77</span>,<span class="number">0x7c</span>,<span class="number">0x39</span>,<span class="number">0x5e</span>,<span class="number">0x79</span>,<span class="number">0x71</span>};
+<span class="comment">//0、1、2、3、4、5、6、7、8、9、A、b、C、d、E、F的显示码</span>
+uchar KeyValue;        <span class="comment">//用来存放读取到的键值</span>
+
+<span class="keyword">void</span> Delay10ms(<span class="keyword">unsigned</span> <span class="keyword">int</span> c);<span class="comment">//延时10ms</span>
+<span class="keyword">void</span> KeyDown();         <span class="comment">//检测按键函数</span>
+
+<span class="keyword">void</span> main(<span class="keyword">void</span>)
+{
+    <span class="keyword">while</span>(<span class="number">1</span>)
+    {
+        KeyDown();
+        DIG = ~DIG_CODE[KeyValue];
+    }                
+}
+
+<span class="keyword">void</span> KeyDown(<span class="keyword">void</span>)
+{
+    <span class="keyword">char</span> a = <span class="number">0</span>;
+    KEY=<span class="number">0x0f</span>;
+    <span class="keyword">if</span>(KEY!=<span class="number">0x0f</span>)<span class="comment">//读取按键是否按下</span>
+    {
+        Delay10ms(<span class="number">1</span>);<span class="comment">//延时10ms进行消抖</span>
+        <span class="keyword">if</span>(KEY!=<span class="number">0x0f</span>)<span class="comment">//再次检测键盘是否按下</span>
+        {
+
+            <span class="comment">//测试列</span>
+            KEY=<span class="number">0X0F</span>;
+            <span class="keyword">switch</span>(KEY)
+            {
+                <span class="keyword">case</span>(<span class="number">0X07</span>):    KeyValue=<span class="number">0</span>;<span class="keyword">break</span>;
+                <span class="keyword">case</span>(<span class="number">0X0b</span>):    KeyValue=<span class="number">4</span>;<span class="keyword">break</span>;
+                <span class="keyword">case</span>(<span class="number">0X0d</span>): KeyValue=<span class="number">8</span>;<span class="keyword">break</span>;
+                <span class="keyword">case</span>(<span class="number">0X0e</span>):    KeyValue=<span class="number">12</span>;<span class="keyword">break</span>;
+            }
+            <span class="comment">//测试行</span>
+            KEY=<span class="number">0XF0</span>;
+            <span class="keyword">switch</span>(KEY)
+            {
+                <span class="keyword">case</span>(<span class="number">0X70</span>):    KeyValue=KeyValue+<span class="number">3</span>;<span class="keyword">break</span>;
+                <span class="keyword">case</span>(<span class="number">0Xb0</span>):    KeyValue=KeyValue+<span class="number">2</span>;<span class="keyword">break</span>;
+                <span class="keyword">case</span>(<span class="number">0Xd0</span>): KeyValue=KeyValue+<span class="number">1</span>;<span class="keyword">break</span>;
+                <span class="keyword">case</span>(<span class="number">0Xe0</span>):    KeyValue=KeyValue;<span class="keyword">break</span>;
+            }
+            <span class="keyword">while</span>((a&lt;<span class="number">50</span>) &amp;&amp; (KEY!=<span class="number">0xf0</span>))     <span class="comment">//检测按键松手检测</span>
+            {
+                Delay10ms(<span class="number">1</span>);
+                a++;
+            }
+        }
+    }
+}
+
+
+<span class="keyword">void</span> Delay10ms(uint c)   <span class="comment">//误差 0us</span>
+{
+uchar a, b;
+
+    <span class="comment">//--c已经在传递过来的时候已经赋值了，所以在for语句第一句就不用赋值了--//</span>
+<span class="keyword">for</span> (;c&gt;<span class="number">0</span>;c--)
+    {
+        <span class="keyword">for</span> (b=<span class="number">38</span>;b&gt;<span class="number">0</span>;b--)
+        {
+            <span class="keyword">for</span> (a=<span class="number">130</span>;a&gt;<span class="number">0</span>;a--);
+        }  
+    }   
+}
+</code></pre><p><strong>方法二行列扫描：</strong>  比逐行简洁快捷<br>        键盘高4位赋值为0,低4位赋值为1,当读到IO口数值不等时,进入判断—-先测试列,高4为赋值为0,低4位赋值为1,根据读取到的键值判断哪一行被按下.接着测试行,高4位赋值为1,低4位赋值为0,根据读取到的IO口值判断是哪个键被按下.</p>
+<h2 id="例程">例程</h2>
+<hr>
+<pre><code><span class="preprocessor">#<span class="keyword">include</span>&lt;reg51.h&gt;</span>
+<span class="preprocessor">#<span class="keyword">include</span>&lt;intrins.h&gt;    </span>
+<span class="preprocessor">#<span class="keyword">define</span> uchar unsigned char</span>
+<span class="preprocessor">#<span class="keyword">define</span> uint unsigned int</span>
+uchar code DIG_CODE[<span class="number">17</span>]={
+<span class="number">0x3f</span>,<span class="number">0x06</span>,<span class="number">0x5b</span>,<span class="number">0x4f</span>,<span class="number">0x66</span>,<span class="number">0x6d</span>,<span class="number">0x7d</span>,<span class="number">0x07</span>,
+<span class="number">0x7f</span>,<span class="number">0x6f</span>,<span class="number">0x77</span>,<span class="number">0x7c</span>,<span class="number">0x39</span>,<span class="number">0x5e</span>,<span class="number">0x79</span>,<span class="number">0x71</span>};
+<span class="comment">//0、1、2、3、4、5、6、7、8、9、A、b、C、d、E、F的显示码</span>
+<span class="keyword">unsigned</span> <span class="keyword">char</span> KeyValue;
+<span class="comment">//用来存放读取到的键值</span>
+<span class="keyword">void</span> Delay10ms();   <span class="comment">//延时10ms</span>
+<span class="keyword">void</span> KeyDown();         <span class="comment">//检测按键函数</span>
+
+
+<span class="keyword">void</span> main(<span class="keyword">void</span>)
+{
+
+    <span class="keyword">while</span>(<span class="number">1</span>)
+    {
+        KeyDown();
+        GPIO_DIG=~DIG_CODE[KeyValue];
+    }                
+}
+
+<span class="keyword">void</span> KeyDown(<span class="keyword">void</span>)
+{
+    <span class="keyword">char</span> a=<span class="number">0</span>;
+    GPIO_KEY=<span class="number">0x0f</span>;
+    <span class="keyword">if</span>(GPIO_KEY!=<span class="number">0x0f</span>)<span class="comment">//读取按键是否按下</span>
+    {
+        Delay10ms();<span class="comment">//延时10ms进行消抖</span>
+        <span class="keyword">if</span>(GPIO_KEY!=<span class="number">0x0f</span>)<span class="comment">//再次检测键盘是否按下</span>
+        {
+
+            <span class="comment">//测试列</span>
+            GPIO_KEY=<span class="number">0X0F</span>;
+            <span class="keyword">switch</span>(GPIO_KEY)
+            {
+                <span class="keyword">case</span>(<span class="number">0X07</span>):    KeyValue=<span class="number">0</span>;<span class="keyword">break</span>;
+                <span class="keyword">case</span>(<span class="number">0X0b</span>):    KeyValue=<span class="number">1</span>;<span class="keyword">break</span>;
+                <span class="keyword">case</span>(<span class="number">0X0d</span>): KeyValue=<span class="number">2</span>;<span class="keyword">break</span>;
+                <span class="keyword">case</span>(<span class="number">0X0e</span>):    KeyValue=<span class="number">3</span>;<span class="keyword">break</span>;
+            }
+            <span class="comment">//测试行</span>
+            GPIO_KEY=<span class="number">0XF0</span>;
+            <span class="keyword">switch</span>(GPIO_KEY)
+            {
+                <span class="keyword">case</span>(<span class="number">0X70</span>):    KeyValue=KeyValue;<span class="keyword">break</span>;
+                <span class="keyword">case</span>(<span class="number">0Xb0</span>):    KeyValue=KeyValue+<span class="number">4</span>;<span class="keyword">break</span>;
+                <span class="keyword">case</span>(<span class="number">0Xd0</span>): KeyValue=KeyValue+<span class="number">8</span>;<span class="keyword">break</span>;
+                <span class="keyword">case</span>(<span class="number">0Xe0</span>):    KeyValue=KeyValue+<span class="number">12</span>;<span class="keyword">break</span>;
+            }
+            <span class="keyword">while</span>((a&lt;<span class="number">50</span>)&amp;&amp;(GPIO_KEY!=<span class="number">0xf0</span>))     <span class="comment">//检测按键松手检测</span>
+            {
+                Delay10ms();
+                a++;
+            }
+        }
+    }
+}
+
+<span class="keyword">void</span> Delay10ms(<span class="keyword">void</span>)   <span class="comment">//误差 0us</span>
+{
+<span class="keyword">unsigned</span> <span class="keyword">char</span> a,b,c;
+<span class="keyword">for</span>(c=<span class="number">1</span>;c&gt;<span class="number">0</span>;c--)
+<span class="keyword">for</span>(b=<span class="number">38</span>;b&gt;<span class="number">0</span>;b--)
+<span class="keyword">for</span>(a=<span class="number">130</span>;a&gt;<span class="number">0</span>;a--);
+}
+</code></pre>
+      
+    </div>
+    <footer class="article-footer">
+      <a data-url="https://hitfake.github.io/2014/10/01/单片机学习笔记之矩阵键盘/" data-id="fum64vgtm246a9fr" class="article-share-link">Share</a>
+      
+      
+  <ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/单片机/">单片机</a></li></ul>
+
+    </footer>
+  </div>
+  
+</article>
+
+
+  
+    <article id="post-超声波模块之HC-SR04 " class="article article-type-post" itemscope itemprop="blogPost">
+  <div class="article-meta">
+    <a href="/2014/10/01/超声波模块之HC-SR04 /" class="article-date">
+  <time datetime="2014-10-01T10:05:37.000Z" itemprop="datePublished">10月 1 2014</time>
+</a>
+    
+  </div>
+  <div class="article-inner">
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 itemprop="name">
+      <a class="article-title" href="/2014/10/01/超声波模块之HC-SR04 /">超声波模块之HC-SR04</a>
+    </h1>
+  
+
+      </header>
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <h2 id="工作原理"><strong>工作原理</strong></h2>
+<p>HC-SR04超声波测距模块可提供2cm-400cm的非接触式距离感测功能，测距精度可达高到3mm；模块包括超声波发射器、接收器与控制电路。</p>
+<p>  <strong>接线方式：VCC、trig（控制端）、  echo（接收端）、 GND</strong></p>
+<ol>
+<li>采用IO口TRIG触发测距，给10us以上的高电平;</li>
+<li>模块自动发送8个40khz的方波，自动检测是否有信号返回；</li>
+<li>有信号返回，通过IO口ECHO输出一个高电平，高电平持续的时间就是超声波从发射到返回的时间。测试距离=(高电平时间*声速(340M/S))/2;[建议测量周期为60ms以上，以防止发射信号对回响信号的影响]</li>
+</ol>
+<h5 id="本模块使用方法简单,一个控制口发一个10US以上的高电平,就可以在接收口等待高电平输出-一有输出就可以开定时器计时,当此口变为低电平时就可以读定时器的值,此时就为此次测距的时间,方可算出距离-如此不断的周期测,即可以达到你移动测量的值">本模块使用方法简单,一个控制口发一个10US以上的高电平,就可以在接收口等待高电平输出.一有输出就可以开定时器计时,当此口变为低电平时就可以读定时器的值,此时就为此次测距的时间,方可算出距离.如此不断的周期测,即可以达到你移动测量的值</h5>
+<h4 id="操作：">操作：</h4>
+<ol>
+<li>初始化时将trig和echo端口都置低，首先向给 trig 发送至少10 us的高电平脉冲（模块自动向外发送8个40K的方波）</li>
+<li>捕捉 echo 端输出上升沿，捕捉到上升沿的同时，打开定时器开始计时，再次等待捕捉echo的下降沿</li>
+<li>当捕捉到下降沿，读出计时器的时间，这就是超声波在空气中运行的时间，按照 测试距离=(高电平时间*声速(340M/S))/2 就可以算出超声波到障碍物的距离。 </li>
+</ol>
+<h2 id="例程">例程</h2>
+<pre><code><span class="preprocessor">#include&lt;reg51.h&gt;</span>
+<span class="preprocessor">#define uchar unsigned char </span>
+<span class="preprocessor">#define uint  unsigned int </span>
+
+<span class="keyword">uchar</span> dutab[<span class="number">16</span>]={<span class="number">0x28</span>,<span class="number">0x7e</span>,<span class="number">0xa2</span>,<span class="number">0x62</span>,<span class="number">0x74</span>,<span class="number">0x61</span>,<span class="number">0x21</span>,<span class="number">0x7a</span>,<span class="number">0x20</span>,<span class="number">0x60</span>,
+<span class="number">0x30</span>,<span class="number">0x25</span>,<span class="number">0xa9</span>,<span class="number">0x26</span>,<span class="number">0xa1</span>,<span class="number">0xb1</span>};<span class="comment">//0 1 2 3 4 5 6 7 8 9 A-E</span>
+<span class="keyword">uchar</span> wetab={<span class="number">0xfe</span>,<span class="number">0xfd</span>,<span class="number">0xfb</span>,<span class="number">0xf7</span>,<span class="number">0xef</span>,<span class="number">0xdf</span>,<span class="number">0xbf</span>,<span class="number">0x7f</span>};
+
+<span class="keyword">uint</span> j,dat;
+<span class="keyword">uchar</span> bat[<span class="number">4</span>];
+
+<span class="keyword">void</span> delay(<span class="keyword">uint</span> t)
+{
+        <span class="keyword">while</span>(t--);
+}
+
+<span class="keyword">void</span> timer0Init()
+{
+    TMOD=<span class="number">0x01</span>;
+    TH0=<span class="number">0</span>;
+    TL0=<span class="number">0</span>;
+}
+
+<span class="keyword">void</span> super_start()
+{
+    Trig=<span class="number">1</span>;
+    delay(<span class="number">15</span>);<span class="comment">//10us以上的高电平以触发测距</span>
+    Trig=<span class="number">0</span>;     
+}
+
+<span class="keyword">void</span> super_distance()
+{
+    j=TH0*<span class="number">256</span>+TL0;
+    TH0=<span class="number">0x00</span>;
+    TL0=<span class="number">0x00</span>;
+    dat=(j*<span class="number">1.7</span>)/<span class="number">10</span>;
+    bat[<span class="number">0</span>]=dat/<span class="number">1000</span>|<span class="number">0x80</span>;
+    bat[<span class="number">1</span>]=dat%<span class="number">1000</span>/<span class="number">100</span>;
+    bat[<span class="number">2</span>]=dat%<span class="number">1000</span>%<span class="number">100</span>/<span class="number">10</span>;
+    bat[<span class="number">3</span>]=dat%<span class="number">1000</span>%<span class="number">100</span>%<span class="number">10</span>;        
+}
+
+<span class="keyword">void</span> display()
+{
+    <span class="keyword">uchar</span> i;
+    <span class="keyword">for</span>(i=<span class="number">0</span>;i&lt;<span class="number">4</span>;i++)
+    {
+        P0=dutab[bat[i]];    
+        P2=wetab[i];
+        delay(<span class="number">100</span>);
+    }
+}
+
+
+<span class="keyword">void</span> main()
+{
+    <span class="keyword">while</span>(<span class="number">1</span>)
+    {
+        <span class="comment">/*这部分是我觉得写的很精彩的一段代码*/</span>
+        tim0_init();
+        super_start();
+        <span class="keyword">while</span>(echo==<span class="number">0</span>);
+        TR0=<span class="number">1</span>;
+        <span class="keyword">while</span>(echo==<span class="number">1</span>);
+        TR0=<span class="number">0</span>;
+        super_distance();
+        display();
+        delay(<span class="number">10000</span>);
+    }    
+}
+</code></pre>
+      
+    </div>
+    <footer class="article-footer">
+      <a data-url="https://hitfake.github.io/2014/10/01/超声波模块之HC-SR04 /" data-id="6mvlht7p9yusqzhv" class="article-share-link">Share</a>
+      
+      
+  <ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/单片机/">单片机</a></li></ul>
+
+    </footer>
+  </div>
+  
+</article>
+
+
+  
+    <article id="post-动态数码管(二) -- 数码管流水灯(不用译码器)" class="article article-type-post" itemscope itemprop="blogPost">
+  <div class="article-meta">
+    <a href="/2014/10/01/动态数码管(二) -- 数码管流水灯(不用译码器)/" class="article-date">
+  <time datetime="2014-10-01T10:05:37.000Z" itemprop="datePublished">10月 1 2014</time>
+</a>
+    
+  </div>
+  <div class="article-inner">
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 itemprop="name">
+      <a class="article-title" href="/2014/10/01/动态数码管(二) -- 数码管流水灯(不用译码器)/">动态数码管(二) -- 数码管流水等(不用译码器)</a>
+    </h1>
+  
+
+      </header>
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <h5 id="实现数码管动态显示需要依靠程序进行动态扫描。">实现数码管动态显示需要依靠程序进行动态扫描。</h5>
+<h5 id="所谓动态扫描显示即轮流向各位数码管送出字形码和相应的位选，">所谓动态扫描显示即轮流向各位数码管送出字形码和相应的位选，</h5>
+<h5 id="利用发光管的余辉和人眼视觉暂留作用，使人的感觉好像各位数码管同时都在显示-">利用发光管的余辉和人眼视觉暂留作用，使人的感觉好像各位数码管同时都在显示.</h5>
+<h2 id="例程:">例程:</h2>
+<pre><code><span class="preprocessor">#include&lt;reg51.h&gt;</span>
+<span class="preprocessor">#define dula P0</span>
+<span class="preprocessor">#define wela P1</span>
+<span class="preprocessor">#define uint unsigned int </span>
+<span class="preprocessor">#define uchar unsigned char </span>
+
+<span class="comment">/*位选数码表*/</span>
+<span class="keyword">uchar</span> code wetab[]={  
+<span class="number">0xfe</span>,<span class="number">0xfd</span>,<span class="number">0xfb</span>,<span class="number">0xf7</span>,<span class="number">0xef</span>,<span class="number">0xdf</span>,<span class="number">0xbf</span>,<span class="number">0x7f</span>};  
+<span class="comment">/*段选数码表,可自定义*/</span>  
+<span class="keyword">uchar</span> code dutab[]={  
+    <span class="number">0x3f</span>,<span class="number">0x06</span>,<span class="number">0x5b</span>,<span class="number">0x4f</span>,  
+    <span class="number">0x66</span>,<span class="number">0x6d</span>,<span class="number">0x7d</span>,<span class="number">0x07</span>,  
+};  
+<span class="keyword">void</span> delay(<span class="keyword">uint</span> z);<span class="comment">//延时程序声明  </span>
+
+<span class="keyword">void</span> main()
+{    
+    <span class="keyword">uchar</span> i,j;
+    <span class="keyword">for</span>(i=<span class="number">0</span>;i&lt;<span class="number">8</span>;i++){
+    <span class="keyword">switch</span>(i){  
+        <span class="keyword">case</span>(<span class="number">0</span>):wela=wetab[i];<span class="keyword">break</span>;  
+        <span class="keyword">case</span>(<span class="number">1</span>):wela=wetab[i];<span class="keyword">break</span>;  
+        <span class="keyword">case</span>(<span class="number">2</span>):wela=wetab[i];<span class="keyword">break</span>;  
+        <span class="keyword">case</span>(<span class="number">3</span>):wela=wetab[i];<span class="keyword">break</span>;  
+        <span class="keyword">case</span>(<span class="number">4</span>):wela=wetab[i];<span class="keyword">break</span>;  
+        <span class="keyword">case</span>(<span class="number">5</span>):wela=wetab[i];<span class="keyword">break</span>;  
+        <span class="keyword">case</span>(<span class="number">6</span>):wela=wetab[i];<span class="keyword">break</span>;  
+        <span class="keyword">case</span>(<span class="number">7</span>):wela=wetab[i];<span class="keyword">break</span>;  
+    }
+    dula=dutab[i];<span class="comment">//发送段选</span>
+    delay(<span class="number">1000</span>);<span class="comment">//延时扫描</span>
+    dula=<span class="number">0</span>;    <span class="comment">//设置段选为0,消隐  </span>
+    }
+}
+
+<span class="keyword">void</span> delay(<span class="keyword">uint</span> z)  
+{  
+    <span class="keyword">uint</span> x,y;  
+    <span class="keyword">for</span>(x=z;x&gt;<span class="number">0</span>;x--)  
+        <span class="keyword">for</span>(y=<span class="number">110</span>;y&gt;<span class="number">0</span>;y--);      
+}
+</code></pre>
+      
+    </div>
+    <footer class="article-footer">
+      <a data-url="https://hitfake.github.io/2014/10/01/动态数码管(二) -- 数码管流水灯(不用译码器)/" data-id="vy2iix68cd20rerx" class="article-share-link">Share</a>
+      
+      
+  <ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/单片机/">单片机</a></li></ul>
+
+    </footer>
+  </div>
+  
+</article>
+
+
+  
+    <article id="post-单片机学习笔记之LCD" class="article article-type-post" itemscope itemprop="blogPost">
+  <div class="article-meta">
+    <a href="/2014/10/01/单片机学习笔记之LCD/" class="article-date">
+  <time datetime="2014-10-01T10:05:37.000Z" itemprop="datePublished">10月 1 2014</time>
+</a>
+    
+  </div>
+  <div class="article-inner">
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 itemprop="name">
+      <a class="article-title" href="/2014/10/01/单片机学习笔记之LCD/">单片机学习笔记之LCD</a>
+    </h1>
+  
+
+      </header>
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <h2 id="LCD1602引脚">LCD1602引脚</h2>
+<pre><code>1.VSS    电源地  
+2.VDD    电源正  
+3.VL    液晶显示偏压信号-----<span class="keyword">*</span><span class="keyword">*</span>在电路板上可通过电位器进行调节<span class="keyword">*</span><span class="keyword">*</span>
+<span class="keyword">*</span><span class="keyword">*</span>4.RS    数据/命令选择端(H/L)<span class="keyword">*</span><span class="keyword">*</span>
+<span class="keyword">*</span><span class="keyword">*</span>5.R/W    读/写选择端(H/L)<span class="keyword">*</span><span class="keyword">*</span>
+6.E        使能信号  
+7~14    D0~D7.8个数据IO口  
+15.BLA    背光电源正极
+16.BLK    背光电源负极  
+</code></pre><h2 id="操作步骤"><strong>操作步骤</strong></h2>
+<pre><code>-<span class="ruby">**初始化**  
+</span>-<span class="ruby">写命令(<span class="constant">RS</span>=<span class="constant">L</span>)  
+</span>-<span class="ruby">写数据(<span class="constant">RS</span>=<span class="constant">H</span>) </span>
+</code></pre><h4 id="1-写入命令">1.写入命令</h4>
+<pre><code><span class="constant">RS</span>=L，RW=L,D0~D7=指令码，E=高脉冲  
+
+void LcdWriteCom(uchar com)      <span class="comment">//写入命令</span>
+{
+<span class="constant">    RS</span>=<span class="number">0</span>;
+<span class="constant">    RW</span>=<span class="number">0</span>;
+<span class="constant">    LCD</span>=com;        <span class="comment">//将要写入的命令放入IO口</span>
+<span class="constant">    Delay1ms(10);    //延时&gt;40ns
+    LCD-E</span>=<span class="number">1</span>;            <span class="comment">//LCD使能端置高电平</span>
+<span class="constant">    Delay1ms(10);    //延时&gt;150ns
+    LCD-E</span>=<span class="number">0</span>;
+}
+</code></pre><h4 id="2-写入数据">2.写入数据</h4>
+<pre><code><span class="variable">RS=</span>H，<span class="variable">RW=</span>L,D0~<span class="variable">D7=</span>数据，<span class="variable">E=</span>高脉冲.  
+void LcdWriteData(uchar dat)            //写入数据(<span class="number">8</span>位)
+{
+    <span class="variable">RS=</span><span class="number">1</span>;
+    <span class="variable">RW=</span><span class="number">0</span>;
+    <span class="variable">LCD=</span>dat;            //将要写入的数据发送到IO口
+    Delay1ms(<span class="number">10</span>);        
+    <span class="variable">LCD-E=</span><span class="number">1</span>;
+    Delay1ms(<span class="number">10</span>);
+    <span class="variable">LCD-E=</span><span class="number">0</span>;
+}  
+</code></pre><hr>
+<h3 id="指令码参考1602液晶资料">指令码参考1602液晶资料</h3>
+<p>  <strong>指令码</strong>  </p>
+<pre><code><span class="number">80H</span>+地址码(<span class="number">0</span>-<span class="number">27H</span>---第一行,<span class="number">40</span>-<span class="number">67H</span>---第<span class="number">2</span>行)
+</code></pre><h2 id="—-_">—-  </h2>
+<h4 id="3-初始化">3.初始化</h4>
+<pre><code>void <span class="function">LcdInit</span>()     <span class="comment">//LCD初始化子程序</span>
+{
+     <span class="function">LcdWriteCom</span>(0x38);  <span class="comment">//设置显示模式</span>
+    <span class="function">LcdWriteCom</span>(0x0c);  <span class="comment">//开显示不显示光标，光标不闪烁</span>
+    <span class="function">LcdWriteCom</span>(0x06);  <span class="comment">//写一个指针加1</span>
+    <span class="function">LcdWriteCom</span>(0x01);  <span class="comment">//清屏</span>
+    <span class="function">LcdWriteCom</span>(0x80);  <span class="comment">//设置数据指针起点</span>
+}
+</code></pre><h4 id="例程"><strong>例程</strong></h4>
+<pre><code><span class="preprocessor">#include&lt;reg51.h&gt;</span>
+<span class="preprocessor">#define uchar unsigned char</span>
+<span class="preprocessor">#define uint unsigned int</span>
+<span class="keyword">uchar</span> code table[]=<span class="string">"I LIKE MCU!"</span>;
+<span class="keyword">uchar</span> code table1[]=<span class="string">"WWW.XMUT.COM"</span>;
+sbit lcden=P3^<span class="number">4</span>;
+sbit lcdrs=P3^<span class="number">5</span>;
+<span class="keyword">uchar</span> num;
+
+
+<span class="keyword">void</span> delay(<span class="keyword">uint</span> z)
+{
+    <span class="keyword">uint</span> x,y;
+    <span class="keyword">for</span>(x=z;x&gt;<span class="number">0</span>;x--)
+        <span class="keyword">for</span>(y=<span class="number">110</span>;y&gt;<span class="number">0</span>;y--);
+}
+<span class="keyword">void</span> write_com(<span class="keyword">uchar</span> com)
+{
+    lcdrs=<span class="number">0</span>;
+    P0=com;
+    delay(<span class="number">5</span>);
+    lcden=<span class="number">1</span>;
+    delay(<span class="number">5</span>);
+    lcden=<span class="number">0</span>;
+}
+
+<span class="keyword">void</span> write_data(<span class="keyword">uchar</span> date)
+{
+    lcdrs=<span class="number">1</span>;
+    P0=date;
+    delay(<span class="number">5</span>);
+    lcden=<span class="number">1</span>;
+    delay(<span class="number">5</span>);
+    lcden=<span class="number">0</span>;
+}
+<span class="keyword">void</span> init()
+{
+    dula=<span class="number">0</span>;
+    wela=<span class="number">0</span>;
+    lcden=<span class="number">0</span>;
+    write_com(<span class="number">0x38</span>);
+    write_com(<span class="number">0x0e</span>);
+    write_com(<span class="number">0x06</span>);
+    write_com(<span class="number">0x01</span>);
+    write_com(<span class="number">0x80</span>+<span class="number">0x10</span>);
+}
+<span class="keyword">void</span> main()
+{
+    init();
+    <span class="keyword">for</span>(num=<span class="number">0</span>;num&lt;<span class="number">11</span>;num++)
+    {
+        write_data(table[num]);
+        delay(<span class="number">20</span>);
+    }
+<span class="comment">//    write_com(1);</span>
+    write_com(<span class="number">0x80</span>+<span class="number">0x53</span>);
+    <span class="keyword">for</span>(num=<span class="number">0</span>;num&lt;<span class="number">13</span>;num++)
+    {
+        write_data(table1[num]);
+        delay(<span class="number">20</span>);
+    }
+    <span class="keyword">for</span>(num=<span class="number">0</span>;num&lt;<span class="number">16</span>;num++)
+    {
+        write_com(<span class="number">0x18</span>);
+        delay(<span class="number">20</span>);
+    }
+    <span class="keyword">while</span>(<span class="number">1</span>);
+}
+</code></pre>
+      
+    </div>
+    <footer class="article-footer">
+      <a data-url="https://hitfake.github.io/2014/10/01/单片机学习笔记之LCD/" data-id="asihdoz8wzw1ifhu" class="article-share-link">Share</a>
+      
+      
+  <ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/单片机/">单片机</a></li></ul>
+
+    </footer>
+  </div>
+  
+</article>
+
+
+  
+  
+    <nav id="page-nav">
+      <span class="page-number current">1</span><a class="page-number" href="/page/2/">2</a><a class="page-number" href="/page/3/">3</a><span class="space">&hellip;</span><a class="page-number" href="/page/7/">7</a><a class="extend next" rel="next" href="/page/2/">Next &raquo;</a>
+    </nav>
+  
+</section>
+        
+          <aside id="sidebar">
+  
+    
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">Tags</h3>
+    <div class="widget">
+      <ul class="tag-list"><li class="tag-list-item"><a class="tag-list-link" href="/tags/BLOG/">BLOG</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/blog/">blog</a><span class="tag-list-count">5</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/ios开发/">ios开发</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/单片机/">单片机</a><span class="tag-list-count">20</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/嵌入式/">嵌入式</a><span class="tag-list-count">2</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/数据结构和算法/">数据结构和算法</a><span class="tag-list-count">2</span></li></ul>
+    </div>
+  </div>
+
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">Tag Cloud</h3>
+    <div class="widget tagcloud">
+      <a href="/tags/BLOG/" style="font-size: 10.00px;">BLOG</a><a href="/tags/blog/" style="font-size: 16.67px;">blog</a><a href="/tags/ios开发/" style="font-size: 10.00px;">ios开发</a><a href="/tags/单片机/" style="font-size: 20.00px;">单片机</a><a href="/tags/嵌入式/" style="font-size: 13.33px;">嵌入式</a><a href="/tags/数据结构和算法/" style="font-size: 13.33px;">数据结构和算法</a>
+    </div>
+  </div>
+
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">Archives</h3>
+    <div class="widget">
+      <ul class="archive-list"><li class="archive-list-item"><a class="archive-list-link" href="/archives/2014/10/">October 2014</a><span class="archive-list-count">32</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2014/09/">September 2014</a><span class="archive-list-count">1</span></li></ul>
+    </div>
+  </div>
+
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">Recents</h3>
+    <div class="widget">
+      <ul>
+        
+          <li>
+            <a href="/2014/10/01/单片机学习笔记之步进电机/">单片机学习笔记之步进电机</a>
+          </li>
+        
+          <li>
+            <a href="/2014/10/01/单片机学习笔记之矩阵键盘/">单片机学习笔记之矩阵键盘</a>
+          </li>
+        
+          <li>
+            <a href="/2014/10/01/超声波模块之HC-SR04 /">超声波模块之HC-SR04</a>
+          </li>
+        
+          <li>
+            <a href="/2014/10/01/动态数码管(二) -- 数码管流水灯(不用译码器)/">动态数码管(二) -- 数码管流水等(不用译码器)</a>
+          </li>
+        
+          <li>
+            <a href="/2014/10/01/单片机学习笔记之LCD/">单片机学习笔记之LCD</a>
+          </li>
+        
+      </ul>
+    </div>
+  </div>
+
+  
+</aside>
+        
+      </div>
+      <footer id="footer">
+  
+  <div class="outer">
+    <div id="footer-info" class="inner">
+      &copy; 2014 kench<br>
+      Powered by <a href="http://hexo.io/" target="_blank">Hexo</a>
+    </div>
+  </div>
+</footer>
+    </div>
+    <nav id="mobile-nav">
+  
+    <a href="/" class="mobile-nav-link">Home</a>
+  
+    <a href="/archives" class="mobile-nav-link">Archives</a>
+  
+</nav>
+    
+
+<script src="//ajax.googleapis.com/ajax/libs/jquery/2.0.3/jquery.min.js"></script>
+
+
+  <link rel="stylesheet" href="/fancybox/jquery.fancybox.css" type="text/css">
+
+  <script src="/fancybox/jquery.fancybox.pack.js" type="text/javascript"></script>
+
+
+
+<script src="/js/script.js" type="text/javascript"></script>
+
+
   </div>
 </body>
 </html>

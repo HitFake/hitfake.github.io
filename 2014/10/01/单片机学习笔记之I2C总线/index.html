@@ -1,0 +1,377 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  
+  <title>单片机学习笔记之I2C总线 | 曲线救国</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+  <meta name="description" content="简介
+  只有2根双向信号线(数据线SDA&amp;时钟线SCL).可连接多器件(每个设备都有独立地址),但一般需在每根总线加上拉电阻(一般为10k),以保证空闲时都为高电平. 
+
+多主机系统中,通过总线仲裁决定控线的主机   
+
+
+数据位有效性规定:I2C总线进行数据传送是,时钟信号为高,数据线上的数据必须保持稳定,只有在时钟线为低是,数据线电平才允许变化.
+
+  接收器件收到一个完整的数据字节">
+<meta property="og:type" content="article">
+<meta property="og:title" content="单片机学习笔记之I2C总线">
+<meta property="og:url" content="https://hitfake.github.io/2014/10/01/单片机学习笔记之I2C总线/">
+<meta property="og:site_name" content="曲线救国">
+<meta property="og:description" content="简介
+  只有2根双向信号线(数据线SDA&amp;时钟线SCL).可连接多器件(每个设备都有独立地址),但一般需在每根总线加上拉电阻(一般为10k),以保证空闲时都为高电平. 
+
+多主机系统中,通过总线仲裁决定控线的主机   
+
+
+数据位有效性规定:I2C总线进行数据传送是,时钟信号为高,数据线上的数据必须保持稳定,只有在时钟线为低是,数据线电平才允许变化.
+
+  接收器件收到一个完整的数据字节">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="单片机学习笔记之I2C总线">
+<meta name="twitter:description" content="简介
+  只有2根双向信号线(数据线SDA&amp;时钟线SCL).可连接多器件(每个设备都有独立地址),但一般需在每根总线加上拉电阻(一般为10k),以保证空闲时都为高电平. 
+
+多主机系统中,通过总线仲裁决定控线的主机   
+
+
+数据位有效性规定:I2C总线进行数据传送是,时钟信号为高,数据线上的数据必须保持稳定,只有在时钟线为低是,数据线电平才允许变化.
+
+  接收器件收到一个完整的数据字节">
+
+  
+    <link rel="alternative" href="/atom.xml" title="曲线救国" type="application/atom+xml">
+  
+  
+    <link rel="icon" href="/favicon.png">
+  
+  <link href="//fonts.googleapis.com/css?family=Source+Code+Pro" rel="stylesheet" type="text/css">
+  <link rel="stylesheet" href="/css/style.css" type="text/css">
+
+  
+
+</head>
+<body>
+  <div id="container">
+    <div id="wrap">
+      <header id="header">
+  <div id="banner"></div>
+  <div id="header-outer" class="outer">
+    <div id="header-title" class="inner">
+      <h1 id="logo-wrap">
+        <a href="/" id="logo">曲线救国</a>
+      </h1>
+      
+        <h2 id="subtitle-wrap">
+          <a href="/" id="subtitle">该站主要用于存放学习笔记,主要工作与图片分享站,可访问:hitfake.com</a>
+        </h2>
+      
+    </div>
+    <div id="header-inner" class="inner">
+      <nav id="main-nav">
+        <a id="main-nav-toggle" class="nav-icon"></a>
+        
+          <a class="main-nav-link" href="/">Home</a>
+        
+          <a class="main-nav-link" href="/archives">Archives</a>
+        
+      </nav>
+      <nav id="sub-nav">
+        
+          <a id="nav-rss-link" class="nav-icon" href="/atom.xml" title="RSS Feed"></a>
+        
+        <a id="nav-search-btn" class="nav-icon" title="Search"></a>
+      </nav>
+      <div id="search-form-wrap">
+        <form action="//google.com/search" method="get" accept-charset="UTF-8" class="search-form"><input type="search" name="q" results="0" class="search-form-input" placeholder="Search"><input type="submit" value="&#xF002;" class="search-form-submit"><input type="hidden" name="q" value="site:https://hitfake.github.io"></form>
+      </div>
+    </div>
+  </div>
+</header>
+      <div class="outer">
+        <section id="main"><article id="post-单片机学习笔记之I2C总线" class="article article-type-post" itemscope itemprop="blogPost">
+  <div class="article-meta">
+    <a href="/2014/10/01/单片机学习笔记之I2C总线/" class="article-date">
+  <time datetime="2014-10-01T10:05:37.000Z" itemprop="datePublished">10月 1 2014</time>
+</a>
+    
+  </div>
+  <div class="article-inner">
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 class="article-title" itemprop="name">
+      单片机学习笔记之I2C总线
+    </h1>
+  
+
+      </header>
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <h2 id="简介">简介</h2>
+<p>  只有2根双向信号线(<strong>数据线SDA&amp;时钟线SCL</strong>).可连接多器件(每个设备都有独立地址),但一般需在每根总线加上拉电阻(一般为10k),以保证空闲时都为高电平. </p>
+<ul>
+<li>多主机系统中,通过总线仲裁决定控线的主机   </li>
+</ul>
+<ol>
+<li>数据位有效性规定:<br>I2C总线进行数据传送是,时钟信号为高,数据线上的数据必须保持稳定,只有在时钟线为低是,数据线电平才允许变化.</li>
+</ol>
+<p>  <em>接收器件收到一个完整的数据字节后，有可能需要完成一些其它工作，如处理内部中断服务等，无法立刻接收下一个字节,这时接收器件可以将<strong>SCL线拉成低电平</strong>,从而使主机处于等待状态.直到接收器件准备好接收下一个字节时,再释放SCL线使之为高电平,从而使数据传送可以继续进行 </em>  </p>
+<h3 id="数据传送格式">数据传送格式</h3>
+<p>(1)字节传送与应答<br>   每一个字节必须保证是<strong>8位长度</strong>,先传送最高位(MSB),每个字节后面都必须跟随一位应答位(即一帧共有9位).</p>
+<ul>
+<li>当从机不对主机寻址信号应答时,它必须将数据线置于高电平,而由主机产生一个终止信号以结束总线数据传送</li>
+<li>如果从机对主机进行了应答,但在数据线传送一段时间后无法继续接收更多数据时,从机可对无法接收的第一个数据字节的”非应答”(即上面的方法)通知主机,主机则发出终止信号结束传送.</li>
+<li>当主机接收到数据时,它收到最后一个数据字节后,必须向从机发出结束信号.这个信号是由对从机的”非应答”实现的.然后从机释放SDA,以允许主机产生终止信号</li>
+</ul>
+<p>(2)数据帧格式  </p>
+<ul>
+<li>I2C总线上传输的数据信号是广义的,既包括地址信号,有包括真正的数据信号  </li>
+<li>在起始信号后必须传送一个从机地址(7位),第8位是数据传送方向位(R/T),用”0”表示主机发送数据(T),”1”表示主机接收数据(R).每次数据传送总是由主机产生终止信号结束.但若主机希望继续占用总线进行新的数据传送,则可不产生终止信号,马上再次发出起始信号对另一从机进行寻址</li>
+</ul>
+<h2 id="总线寻址">总线寻址</h2>
+<p>   采用7位寻址字节(寻址字节是起始信号后的第一个字节)<br>(1)寻址字节位定义<br>   位:    7 6 5 4 3 2 1    0<br>      |—&gt;从机地址&lt;—|  R/W<br>D7~D0位组成从机地址.D0是数据传送方向位.</p>
+<ul>
+<li>主机发送地址是,总线上的每个从机都将这7位地址码与自己的地址进行比较,若相同,则认为自己正在被主机寻址,根据R/T位确定自己为发送器或接收器</li>
+<li>从机地址由固定部分和可编程部分(A2A1A0或表示为E2E1E0)组成.可编程部分决定了可接入多个相同的从机数目.如:一个从机7位寻址地址有4位是固定位,3位是可编程位,这时仅能寻址8个同样器件</li>
+</ul>
+<h2 id="51单片机模拟I2C总线">51单片机模拟I2C总线</h2>
+<p>主机次啊用不带I2C接口的单片机,可利用软件实现I2C总线的数据传送. </p>
+<ol>
+<li>典型信号模拟  </li>
+</ol>
+<ul>
+<li><p>起始信号:SCL为高，SDA负跳变(跳变前必有持续&gt;4.7uS高电平,跳变后持续&gt;4uS,且过程中SCL保持不变),起始结束后SCL和SDA都0<br><strong>- 实现</strong>  </p>
+<p>  void I2cStart()<br>  {</p>
+<pre><code>  /*为防止意外主动将SDA和SCL拉高*/
+  SDA=<span class="number">1</span>;        
+  Delay10us();
+  SCL=<span class="number">1</span>;
+  Delay10us();//建立时间是SDA保持时间&gt;<span class="number">4.</span>7us
+  SDA=<span class="number">0</span>;
+  Delay10us();//保持时间是&gt;4us
+  SCL=<span class="number">0</span>;        //有教程说SCL不用拉低<span class="keyword">...</span>我再看看    
+  Delay10us();
+</code></pre><p>  }    </p>
+</li>
+<li><p>停止信号:SCL为高，SDA由低向高跳变(跳变前持续&gt;4uS,跳变后持续&gt;4.7uS)<br><strong>-实现</strong>  </p>
+<p>  void I2cStop()<br>  {</p>
+<pre><code>  <span class="comment">/*结束后保持SDA.&amp;SCL都为1;表示总线空闲*/</span>
+  <span class="variable">SDA=</span><span class="number">0</span>;
+  Delay10us();
+  <span class="variable">SCL=</span><span class="number">1</span>;
+  Delay10us();//建立时间大于<span class="number">4</span>us
+  <span class="variable">SDA=</span><span class="number">1</span>;
+  Delay10us();//SDA持续时间大于<span class="number">4.7</span>us        
+</code></pre><p>  }  </p>
+</li>
+</ul>
+<ul>
+<li><h2 id="-_发送一个字节">- <strong>发送一个字节</strong></h2>
+</li>
+</ul>
+<pre><code><span class="keyword">uchar</span> I2cSendByte(<span class="keyword">uchar</span> dat)
+{
+<span class="keyword">uchar</span> a=<span class="number">0</span>,b=<span class="number">0</span>;            <span class="comment">//最大255,一个机器周期为1us,最大延255us        </span>
+<span class="keyword">for</span>(a=<span class="number">0</span>;a&lt;<span class="number">8</span>;a++)        <span class="comment">//要发送8位，从最高位开始</span>
+{    
+    <span class="comment">//****将要发送的数据放到数据线上,I2C总线从最高位开始发送,所以dat右移7位</span>
+    SDA=dat&gt;&gt;<span class="number">7</span>;        <span class="comment">//起始信号之后SCL=0,所以可以直接改变SDA信号</span>
+    dat=dat&lt;&lt;<span class="number">1</span>;        <span class="comment">//左移读取次高位</span>
+    Delay10us();
+    SCL=<span class="number">1</span>;            <span class="comment">//I2C总线从此处开始读取数据</span>
+    Delay10us();    <span class="comment">//建立时间&gt;4.7us</span>
+    SCL=<span class="number">0</span>;
+    Delay10us();    <span class="comment">//时间大于4us        </span>
+}
+SDA=<span class="number">1</span>;            <span class="comment">//每个数据发送完毕,将数据线拉高</span>
+Delay10us();    
+SCL=<span class="number">1</span>;            
+<span class="keyword">while</span>(SDA)        <span class="comment">//等待应答,也就是等待从设备把SDA拉低(从机若有应答,会将SDA拉低)</span>
+{
+    b++;
+    if(b&gt;<span class="number">200</span>)     <span class="comment">//如果超过2000us没有应答发送失败，或者为非应答，表示**接收结束**</span>
+    {
+        SCL=<span class="number">0</span>;
+        Delay10us();
+        <span class="keyword">return</span> <span class="number">0</span>;<span class="comment">//表示无应答</span>
+    }
+}
+SCL=<span class="number">0</span>;
+Delay10us();
+<span class="keyword">return</span> <span class="number">1</span>;<span class="comment">//表示应答成功        </span>
+}
+</code></pre><ul>
+<li><h2 id="-_接收一个字节">- <strong>接收一个字节</strong></h2>
+<p>  uchar I2cReadByte()<br>  {</p>
+<pre><code>  <span class="comment">//起始和发送一个字节之后SCL都是0</span>
+  uchar a=<span class="number">0</span>,dat=<span class="number">0</span>;
+<span class="constant">  SDA</span>=<span class="number">1</span>;            <span class="comment">//主机将SDA拉高</span>
+<span class="constant">  Delay10us();
+  for(a</span>=<span class="number">0</span>;a&lt;<span class="number">8</span>;a++)<span class="comment">//接收8个字节</span>
+  {
+<span class="constant">      SCL</span>=<span class="number">1</span>;
+<span class="constant">      Delay10us();
+      dat&lt;&lt;</span>=<span class="number">1</span>;
+      dat|=SDA;
+<span class="constant">      Delay10us();
+      SCL</span>=<span class="number">0</span>;
+<span class="constant">      Delay10us();
+  }
+  return dat;        </span>
+</code></pre><p>  }</p>
+</li>
+<li><p>逻辑0:SCL为高持续&gt;4uS,跳变读取期间,SDA保持低电平稳定  </p>
+</li>
+<li>逻辑1:同逻辑0,但SDA保持为高电平稳定 </li>
+</ul>
+<h2 id="写入过程">写入过程</h2>
+<p>   首先发送该器件的7位地址吗和写方向位”0”(共8位,即1个字节),发送完后释放SDA并在SCL上产生第9个时钟信号,被选中的器件在确认是自己的地址后,在SDA上产生1个应答信号作为相应,单片机收到应答信号就可以传送数据了  </p>
+<ul>
+<li>传送数据时,单片机首先发送一个字节的被写入器件<strong>存储区</strong>首地址,收到存储器件应答后,单片机就逐个发送各数据字节,但每发送一个字节都要等待应答  </li>
+<li>AT24C系列器片内地址没接收到一个数据字节地址后自动加1,装载字节数超过芯片的一次装载字节数时,数据地址将上卷,前面的数据会被覆盖  </li>
+<li>当数据传送完成后,单片机应发出终止信号以结束写入操作.写入n个字节的数据格式:<br> | Start | 器件地址+0 | A | 写入首地址 | A | Data1 | A |……| Data n | A | P |  </li>
+</ul>
+<h2 id="读出过程">读出过程</h2>
+<p>   单片机先发送该器件的7位地址吗和写方向位”0”(“伪写”),发送完程后释放SDA线并在SCL线上产生第9个时钟信号.被选中的存储器件在确认是自己的地址后,在SDA线上产生一个应答信号作为回应信号.<br>   然后再发一个字节要读出器件存储区的首地址,收到应答后就可以读出数据字节,没读出一个字节,单片机都要回复应答信号.当最后一个字节数据读完后,单片机应返回”非应答”(高电平),并发出终止信号以结束读出操作</p>
+<p> | S | 器件地址+0 | A | 读出首地址 | A | 器件地址+1 | A | Data1 | A |……| Data n | A | P |  </p>
+<p>(后续请看EEPROM之24c02)</p>
+
+      
+    </div>
+    <footer class="article-footer">
+      <a data-url="https://hitfake.github.io/2014/10/01/单片机学习笔记之I2C总线/" data-id="x4g6o11ihgzxh2rb" class="article-share-link">Share</a>
+      
+      
+  <ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/单片机/">单片机</a></li></ul>
+
+    </footer>
+  </div>
+  
+    
+<nav id="article-nav">
+  
+    <a href="/2014/10/01/单片机学习笔记之中断 /" id="article-nav-newer" class="article-nav-link-wrap">
+      <strong class="article-nav-caption">Newer</strong>
+      <div class="article-nav-title">
+        
+          单片机学习笔记之中断
+        
+      </div>
+    </a>
+  
+  
+    <a href="/2014/10/01/MCU嵌入式系统设计摘记/" id="article-nav-older" class="article-nav-link-wrap">
+      <strong class="article-nav-caption">Older</strong>
+      <div class="article-nav-title">MCU嵌入式系统设计摘记</div>
+    </a>
+  
+</nav>
+
+  
+</article>
+
+</section>
+        
+          <aside id="sidebar">
+  
+    
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">Tags</h3>
+    <div class="widget">
+      <ul class="tag-list"><li class="tag-list-item"><a class="tag-list-link" href="/tags/BLOG/">BLOG</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/blog/">blog</a><span class="tag-list-count">5</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/ios开发/">ios开发</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/单片机/">单片机</a><span class="tag-list-count">20</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/嵌入式/">嵌入式</a><span class="tag-list-count">2</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/数据结构和算法/">数据结构和算法</a><span class="tag-list-count">2</span></li></ul>
+    </div>
+  </div>
+
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">Tag Cloud</h3>
+    <div class="widget tagcloud">
+      <a href="/tags/BLOG/" style="font-size: 10.00px;">BLOG</a><a href="/tags/blog/" style="font-size: 16.67px;">blog</a><a href="/tags/ios开发/" style="font-size: 10.00px;">ios开发</a><a href="/tags/单片机/" style="font-size: 20.00px;">单片机</a><a href="/tags/嵌入式/" style="font-size: 13.33px;">嵌入式</a><a href="/tags/数据结构和算法/" style="font-size: 13.33px;">数据结构和算法</a>
+    </div>
+  </div>
+
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">Archives</h3>
+    <div class="widget">
+      <ul class="archive-list"><li class="archive-list-item"><a class="archive-list-link" href="/archives/2014/10/">October 2014</a><span class="archive-list-count">32</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2014/09/">September 2014</a><span class="archive-list-count">1</span></li></ul>
+    </div>
+  </div>
+
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">Recents</h3>
+    <div class="widget">
+      <ul>
+        
+          <li>
+            <a href="/2014/10/01/单片机学习笔记之步进电机/">单片机学习笔记之步进电机</a>
+          </li>
+        
+          <li>
+            <a href="/2014/10/01/单片机学习笔记之矩阵键盘/">单片机学习笔记之矩阵键盘</a>
+          </li>
+        
+          <li>
+            <a href="/2014/10/01/超声波模块之HC-SR04 /">超声波模块之HC-SR04</a>
+          </li>
+        
+          <li>
+            <a href="/2014/10/01/动态数码管(二) -- 数码管流水灯(不用译码器)/">动态数码管(二) -- 数码管流水等(不用译码器)</a>
+          </li>
+        
+          <li>
+            <a href="/2014/10/01/单片机学习笔记之LCD/">单片机学习笔记之LCD</a>
+          </li>
+        
+      </ul>
+    </div>
+  </div>
+
+  
+</aside>
+        
+      </div>
+      <footer id="footer">
+  
+  <div class="outer">
+    <div id="footer-info" class="inner">
+      &copy; 2014 kench<br>
+      Powered by <a href="http://hexo.io/" target="_blank">Hexo</a>
+    </div>
+  </div>
+</footer>
+    </div>
+    <nav id="mobile-nav">
+  
+    <a href="/" class="mobile-nav-link">Home</a>
+  
+    <a href="/archives" class="mobile-nav-link">Archives</a>
+  
+</nav>
+    
+
+<script src="//ajax.googleapis.com/ajax/libs/jquery/2.0.3/jquery.min.js"></script>
+
+
+  <link rel="stylesheet" href="/fancybox/jquery.fancybox.css" type="text/css">
+
+  <script src="/fancybox/jquery.fancybox.pack.js" type="text/javascript"></script>
+
+
+
+<script src="/js/script.js" type="text/javascript"></script>
+
+
+  </div>
+</body>
+</html>

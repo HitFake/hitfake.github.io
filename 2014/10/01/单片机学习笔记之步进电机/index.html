@@ -1,0 +1,412 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  
+  <title>单片机学习笔记之步进电机 | 曲线救国</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+  <meta name="description" content="概念:将电脉冲转化为角位移
+型号解读:例28BYJ-48
+28    --    步进电机有效的最大外径为28mm  
+B    --    表示步进电机  
+Y    --    表示永磁型(还有反应式和混合式)
+J    --    表示减速型(输出轴以多个[小]齿轮带动[大]齿轮,转速慢但扭力大)  
+48    --    表示四相(4对激磁性线圈,分别以ABCD表示)八拍(A-AB-B-">
+<meta property="og:type" content="article">
+<meta property="og:title" content="单片机学习笔记之步进电机">
+<meta property="og:url" content="https://hitfake.github.io/2014/10/01/单片机学习笔记之步进电机/">
+<meta property="og:site_name" content="曲线救国">
+<meta property="og:description" content="概念:将电脉冲转化为角位移
+型号解读:例28BYJ-48
+28    --    步进电机有效的最大外径为28mm  
+B    --    表示步进电机  
+Y    --    表示永磁型(还有反应式和混合式)
+J    --    表示减速型(输出轴以多个[小]齿轮带动[大]齿轮,转速慢但扭力大)  
+48    --    表示四相(4对激磁性线圈,分别以ABCD表示)八拍(A-AB-B-">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="单片机学习笔记之步进电机">
+<meta name="twitter:description" content="概念:将电脉冲转化为角位移
+型号解读:例28BYJ-48
+28    --    步进电机有效的最大外径为28mm  
+B    --    表示步进电机  
+Y    --    表示永磁型(还有反应式和混合式)
+J    --    表示减速型(输出轴以多个[小]齿轮带动[大]齿轮,转速慢但扭力大)  
+48    --    表示四相(4对激磁性线圈,分别以ABCD表示)八拍(A-AB-B-">
+
+  
+    <link rel="alternative" href="/atom.xml" title="曲线救国" type="application/atom+xml">
+  
+  
+    <link rel="icon" href="/favicon.png">
+  
+  <link href="//fonts.googleapis.com/css?family=Source+Code+Pro" rel="stylesheet" type="text/css">
+  <link rel="stylesheet" href="/css/style.css" type="text/css">
+
+  
+
+</head>
+<body>
+  <div id="container">
+    <div id="wrap">
+      <header id="header">
+  <div id="banner"></div>
+  <div id="header-outer" class="outer">
+    <div id="header-title" class="inner">
+      <h1 id="logo-wrap">
+        <a href="/" id="logo">曲线救国</a>
+      </h1>
+      
+        <h2 id="subtitle-wrap">
+          <a href="/" id="subtitle">该站主要用于存放学习笔记,主要工作与图片分享站,可访问:hitfake.com</a>
+        </h2>
+      
+    </div>
+    <div id="header-inner" class="inner">
+      <nav id="main-nav">
+        <a id="main-nav-toggle" class="nav-icon"></a>
+        
+          <a class="main-nav-link" href="/">Home</a>
+        
+          <a class="main-nav-link" href="/archives">Archives</a>
+        
+      </nav>
+      <nav id="sub-nav">
+        
+          <a id="nav-rss-link" class="nav-icon" href="/atom.xml" title="RSS Feed"></a>
+        
+        <a id="nav-search-btn" class="nav-icon" title="Search"></a>
+      </nav>
+      <div id="search-form-wrap">
+        <form action="//google.com/search" method="get" accept-charset="UTF-8" class="search-form"><input type="search" name="q" results="0" class="search-form-input" placeholder="Search"><input type="submit" value="&#xF002;" class="search-form-submit"><input type="hidden" name="q" value="site:https://hitfake.github.io"></form>
+      </div>
+    </div>
+  </div>
+</header>
+      <div class="outer">
+        <section id="main"><article id="post-单片机学习笔记之步进电机" class="article article-type-post" itemscope itemprop="blogPost">
+  <div class="article-meta">
+    <a href="/2014/10/01/单片机学习笔记之步进电机/" class="article-date">
+  <time datetime="2014-10-01T10:05:37.000Z" itemprop="datePublished">10月 1 2014</time>
+</a>
+    
+  </div>
+  <div class="article-inner">
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 class="article-title" itemprop="name">
+      单片机学习笔记之步进电机
+    </h1>
+  
+
+      </header>
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <h3 id="概念:将电脉冲转化为角位移">概念:将电脉冲转化为角位移</h3>
+<h3 id="型号解读:例28BYJ-48">型号解读:例28BYJ-48</h3>
+<pre><code><span class="comment">28</span>    <span class="literal">-</span><span class="literal">-</span>    <span class="comment">步进电机有效的最大外径为28mm</span>  
+<span class="comment">B</span>    <span class="literal">-</span><span class="literal">-</span>    <span class="comment">表示步进电机</span>  
+<span class="comment">Y</span>    <span class="literal">-</span><span class="literal">-</span>    <span class="comment">表示永磁型(还有反应式和混合式)</span>
+<span class="comment">J</span>    <span class="literal">-</span><span class="literal">-</span>    <span class="comment">表示减速型(输出轴以多个</span><span class="title">[</span><span class="comment">小</span><span class="title">]</span><span class="comment">齿轮带动</span><span class="title">[</span><span class="comment">大</span><span class="title">]</span><span class="comment">齿轮</span><span class="string">,</span><span class="comment">转速慢但扭力大)</span>  
+<span class="comment">48</span>    <span class="literal">-</span><span class="literal">-</span>    <span class="comment">表示四相(4对激磁性线圈</span><span class="string">,</span><span class="comment">分别以ABCD表示)八拍(A</span><span class="literal">-</span><span class="comment">AB</span><span class="literal">-</span><span class="comment">B</span><span class="literal">-</span><span class="comment">BC</span><span class="literal">-</span><span class="comment">C</span><span class="literal">-</span><span class="comment">CD</span><span class="literal">-</span><span class="comment">D</span><span class="literal">-</span><span class="comment">DA)</span> 
+</code></pre><ul>
+<li>相数:激磁线圈对数,每对引出一根控制线,一端开关接地,另一端共接VCC—-4相5线(4相6线为每2相共用1根电源线)</li>
+<li>拍数:完成一个磁场周期性变化所需的脉冲数<br>  单相4拍:A-B-C-D<br>  双相4拍AB-BC-CD-DA    </li>
+</ul>
+<h3 id="单极性步进电机的节拍(5线3为例)">单极性步进电机的节拍(5线3为例)</h3>
+<pre><code>单四拍<span class="symbol">:</span>    <span class="constant">A</span>-<span class="constant">B</span>-<span class="constant">C</span>-<span class="constant">D</span>  
+双四拍<span class="symbol">:</span>    <span class="constant">AB</span>-<span class="constant">BC</span>-<span class="constant">CD</span>-<span class="constant">DA</span>
+单双四拍<span class="symbol">:A-AB-B-BC-C-CD-D-DA</span>(半步工作方式)  
+</code></pre><h3 id="双极性步进电机的节拍(4线2相为例)">双极性步进电机的节拍(4线2相为例)</h3>
+<pre><code><span class="label">单四拍:</span>    <span class="literal">A</span>/ - B - <span class="literal">A</span> - B/  
+<span class="label">双四拍:</span>    <span class="literal">A</span>/B - AB - AB/ - <span class="literal">A</span>/B/  
+<span class="label">单双8拍:</span>    <span class="literal">A</span>/    <span class="literal">A</span>/B    B    AB    <span class="literal">A</span>    AB/    B/    <span class="literal">A</span>/B/
+</code></pre><h4 id="步进角:_步进电机定子绕组每改变一次通电状态0,转子转过的角度">步进角: 步进电机定子绕组每改变一次通电状态0,转子转过的角度</h4>
+<pre><code>=<span class="ruby"><span class="number">360</span>/定子相数*转子磁极对数*通电方式  
+</span>    通电方式C--=1,单相轮流通电or双向轮流通电  
+            -<span class="ruby">-=<span class="number">2</span>单\双相轮流通电</span>
+</code></pre><h5 id="未工作到的IO口可任意置0或1,然后写出步进电机相序表">未工作到的IO口可任意置0或1,然后写出步进电机相序表</h5>
+<pre><code><span class="attribute">如:单双8拍.高位-&gt;低位</span>=<span class="string">DCBA  
+    拍A:0001;拍AB:0011  </span>
+</code></pre><p><strong>亦可直接查看相应的电机手册</strong></p>
+<h4 id="专业步进电机驱动芯片介绍(UDN2619)">专业步进电机驱动芯片介绍(UDN2619)</h4>
+<pre><code>PHASE1/2    控制电流方向  
+IO/I1        控制电流输出大小  
+</code></pre><h2 id="例程">例程</h2>
+<pre><code>/<span class="keyword">*</span><span class="keyword">*</span><span class="keyword">*</span><span class="keyword">*</span><span class="keyword">*</span><span class="keyword">*</span><span class="keyword">*</span><span class="keyword">*</span><span class="keyword">*</span><span class="keyword">*</span><span class="keyword">*</span><span class="keyword">*</span><span class="keyword">*</span><span class="keyword">*</span><span class="keyword">*</span><span class="keyword">*</span><span class="keyword">*</span><span class="keyword">*</span><span class="keyword">*</span><span class="keyword">*</span><span class="keyword">*</span><span class="keyword">*</span><span class="keyword">*</span><span class="keyword">*</span><span class="keyword">*</span><span class="keyword">*</span><span class="keyword">*</span><span class="keyword">*</span><span class="keyword">*</span><span class="keyword">*</span><span class="keyword">*</span><span class="keyword">*</span><span class="keyword">*</span><span class="keyword">*</span><span class="keyword">*</span><span class="keyword">*</span><span class="keyword">*</span><span class="keyword">*</span><span class="keyword">*</span><span class="keyword">*</span><span class="keyword">*</span><span class="keyword">*</span><span class="keyword">*</span><span class="keyword">*</span><span class="keyword">*</span><span class="keyword">*</span><span class="keyword">*</span><span class="keyword">*</span><span class="keyword">*</span><span class="keyword">*</span><span class="keyword">*</span><span class="keyword">*</span><span class="keyword">*</span><span class="keyword">*</span><span class="keyword">*</span><span class="keyword">*</span><span class="keyword">*</span><span class="keyword">*</span><span class="keyword">*</span><span class="keyword">*</span><span class="keyword">*</span><span class="keyword">*</span><span class="keyword">*</span><span class="keyword">*</span><span class="keyword">*</span><span class="keyword">*</span><span class="keyword">*</span><span class="keyword">*</span><span class="keyword">*</span><span class="keyword">*</span><span class="keyword">*</span><span class="keyword">*</span><span class="keyword">*</span><span class="keyword">*</span><span class="keyword">*</span><span class="keyword">*</span><span class="keyword">*</span><span class="keyword">*</span><span class="keyword">*</span><span class="keyword">*</span><span class="keyword">*</span><span class="keyword">*</span><span class="keyword">*</span><span class="keyword">*</span><span class="keyword">*</span>
+<span class="keyword">*</span> 正转：A/  A/B  B  AB  A  AB/  B/  A/B/
+<span class="keyword">*</span> 反转：A/B/  B/  AB/  A  AB  B  A/B  A/                                    
+<span class="keyword">*</span> 
+<span class="keyword">*</span> UDN2916电流控制真值表：
+<span class="keyword">*</span>     I0        I1         输出电流
+<span class="keyword">*</span>      L        L          最大
+<span class="keyword">*</span>      H        L          最大<span class="keyword">*</span>2/3
+<span class="keyword">*</span>      L        H          最大<span class="keyword">*</span>1/3
+<span class="keyword">*</span> H H 0     <span class="keyword">*</span>           <span class="keyword">*</span>
+   J14短路冒需断开                                <span class="keyword">*</span>
+<span class="keyword">*</span><span class="keyword">*</span><span class="keyword">*</span><span class="keyword">*</span><span class="keyword">*</span><span class="keyword">*</span><span class="keyword">*</span><span class="keyword">*</span><span class="keyword">*</span><span class="keyword">*</span><span class="keyword">*</span><span class="keyword">*</span><span class="keyword">*</span><span class="keyword">*</span><span class="keyword">*</span><span class="keyword">*</span><span class="keyword">*</span><span class="keyword">*</span><span class="keyword">*</span><span class="keyword">*</span><span class="keyword">*</span><span class="keyword">*</span><span class="keyword">*</span><span class="keyword">*</span><span class="keyword">*</span><span class="keyword">*</span><span class="keyword">*</span><span class="keyword">*</span><span class="keyword">*</span><span class="keyword">*</span><span class="keyword">*</span><span class="keyword">*</span><span class="keyword">*</span><span class="keyword">*</span><span class="keyword">*</span><span class="keyword">*</span><span class="keyword">*</span><span class="keyword">*</span><span class="keyword">*</span><span class="keyword">*</span><span class="keyword">*</span><span class="keyword">*</span><span class="keyword">*</span><span class="keyword">*</span><span class="keyword">*</span><span class="keyword">*</span><span class="keyword">*</span><span class="keyword">*</span><span class="keyword">*</span><span class="keyword">*</span><span class="keyword">*</span><span class="keyword">*</span><span class="keyword">*</span><span class="keyword">*</span><span class="keyword">*</span><span class="keyword">*</span><span class="keyword">*</span><span class="keyword">*</span><span class="keyword">*</span><span class="keyword">*</span><span class="keyword">*</span><span class="keyword">*</span><span class="keyword">*</span><span class="keyword">*</span><span class="keyword">*</span><span class="keyword">*</span><span class="keyword">*</span><span class="keyword">*</span><span class="keyword">*</span><span class="keyword">*</span><span class="keyword">*</span><span class="keyword">*</span><span class="keyword">*</span><span class="keyword">*</span><span class="keyword">*</span><span class="keyword">*</span><span class="keyword">*</span><span class="keyword">*</span><span class="keyword">*</span><span class="keyword">*</span><span class="keyword">*</span><span class="keyword">*</span><span class="keyword">*</span><span class="keyword">*</span><span class="keyword">*</span><span class="keyword">*</span>/  
+<span class="comment">#include "reg51.h"</span>
+
+<span class="comment">#define speed 2</span>
+ //Motor
+sbit PH1 = P1^0;      //定义管脚
+sbit PH2 = P1^1;
+sbit I01 = P1^2;
+sbit I11 = P1^3;
+sbit IO2 = P1^4;
+sbit I12 = P1^5;
+
+
+
+void delay(int time);
+
+/<span class="keyword">*</span><span class="keyword">*</span><span class="keyword">*</span><span class="keyword">*</span><span class="keyword">*</span><span class="keyword">*</span><span class="keyword">*</span><span class="keyword">*</span><span class="keyword">*</span><span class="keyword">*</span><span class="keyword">*</span><span class="keyword">*</span><span class="keyword">*</span><span class="keyword">*</span><span class="keyword">*</span><span class="keyword">*</span><span class="keyword">*</span><span class="keyword">*</span><span class="keyword">*</span><span class="keyword">*</span><span class="keyword">*</span><span class="keyword">*</span><span class="keyword">*</span><span class="keyword">*</span><span class="keyword">*</span><span class="keyword">*</span><span class="keyword">*</span><span class="keyword">*</span><span class="keyword">*</span><span class="keyword">*</span><span class="keyword">*</span><span class="keyword">*</span><span class="keyword">*</span><span class="keyword">*</span><span class="keyword">*</span><span class="keyword">*</span><span class="keyword">*</span><span class="keyword">*</span><span class="keyword">*</span>
+函数功能：产生脉冲控制步进机
+正转：A/  A/B  B  AB  A  AB/  B/  A/B/
+I0 I1 均为0 以最大电流输出（没有四分） 均为1不输出电流
+<span class="keyword">*</span><span class="keyword">*</span><span class="keyword">*</span><span class="keyword">*</span><span class="keyword">*</span><span class="keyword">*</span><span class="keyword">*</span><span class="keyword">*</span><span class="keyword">*</span><span class="keyword">*</span><span class="keyword">*</span><span class="keyword">*</span><span class="keyword">*</span><span class="keyword">*</span><span class="keyword">*</span><span class="keyword">*</span><span class="keyword">*</span><span class="keyword">*</span><span class="keyword">*</span><span class="keyword">*</span><span class="keyword">*</span><span class="keyword">*</span><span class="keyword">*</span><span class="keyword">*</span><span class="keyword">*</span><span class="keyword">*</span><span class="keyword">*</span><span class="keyword">*</span><span class="keyword">*</span><span class="keyword">*</span><span class="keyword">*</span><span class="keyword">*</span><span class="keyword">*</span><span class="keyword">*</span><span class="keyword">*</span><span class="keyword">*</span><span class="keyword">*</span><span class="keyword">*</span>/
+void Go()
+{     
+    //A/  A拍反向电流
+    PH1 = 0;     //PH1为0 A组线圈为反向电流
+I01 = 0;
+    I11 = 0;     //以最大电流输出（没细分） 以下相同 均是此意思
+
+
+    PH2 = 1; //PH2为1 B组线圈为正向电流
+    I02 = 1;
+    I12 = 1; //关闭电流输出，以下相同均是此意思
+
+
+
+    delay(speed);
+
+     // A/B  AB拍 A为反向电流  B为正向电流
+PH1 = 0; //PH1为0 A组线圈为反向电流
+I01 = 0;
+    I11 = 0;
+
+
+    PH2 = 1; //PH2为1 B组线圈为正向电流
+    I02 = 0;
+    I12 = 0;
+
+
+
+
+    delay(speed);
+    //B      B拍 B为正向电流
+    PH1 = 1;  
+       I01 = 1;
+    I11 = 1;
+
+     PH2 = 1;
+    I02 = 0;
+    I12 = 0;
+
+    delay(speed);
+    //AB   AB拍 均为正向电流
+    PH1 = 1;
+    I01 = 0;
+    I11 = 0;
+
+
+    PH2 = 1;  
+    I02 = 0;
+    I12 = 0;
+       delay(speed);
+    //A
+    PH1 = 1;
+    I01 = 0;
+    I11 = 0;
+
+    PH2 = 0; 
+    I02 = 1;
+    I12 = 1;
+
+    delay(speed);
+    //AB/
+    PH1 = 1;
+    I01 = 0;
+    I11 = 0;
+
+
+    PH2 = 0;  
+    I02 = 0;
+    I12 = 0;
+
+    delay(speed);
+    //  B/
+    PH1 = 0;
+    I01 = 1;
+    I11 = 1;
+
+
+PH2 = 0; 
+    I02 = 0;
+    I12 = 0;
+
+    delay(speed);
+    //   A/B/
+    PH1 = 0;
+I01 = 0;
+    I11 = 0;
+
+
+    PH2 = 0; 
+    I02 = 0;
+    I12 = 0;
+
+    delay(speed);
+
+}
+
+void delay(int time)
+{ 
+  int i,j;
+
+  for(j=0; j <span class="variable">&lt;= time; j++)
+   for(i =0 ; i &lt;= 70; i++);
+}
+
+void main()
+{
+
+  while(1)
+  {
+
+Go();  //步进电机运行
+
+  }
+
+}</span>
+</code></pre>
+      
+    </div>
+    <footer class="article-footer">
+      <a data-url="https://hitfake.github.io/2014/10/01/单片机学习笔记之步进电机/" data-id="x7f35rod6sssyxep" class="article-share-link">Share</a>
+      
+      
+  <ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/单片机/">单片机</a></li></ul>
+
+    </footer>
+  </div>
+  
+    
+<nav id="article-nav">
+  
+  
+    <a href="/2014/10/01/单片机学习笔记之矩阵键盘/" id="article-nav-older" class="article-nav-link-wrap">
+      <strong class="article-nav-caption">Older</strong>
+      <div class="article-nav-title">单片机学习笔记之矩阵键盘</div>
+    </a>
+  
+</nav>
+
+  
+</article>
+
+</section>
+        
+          <aside id="sidebar">
+  
+    
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">Tags</h3>
+    <div class="widget">
+      <ul class="tag-list"><li class="tag-list-item"><a class="tag-list-link" href="/tags/BLOG/">BLOG</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/blog/">blog</a><span class="tag-list-count">5</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/ios开发/">ios开发</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/单片机/">单片机</a><span class="tag-list-count">20</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/嵌入式/">嵌入式</a><span class="tag-list-count">2</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/数据结构和算法/">数据结构和算法</a><span class="tag-list-count">2</span></li></ul>
+    </div>
+  </div>
+
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">Tag Cloud</h3>
+    <div class="widget tagcloud">
+      <a href="/tags/BLOG/" style="font-size: 10.00px;">BLOG</a><a href="/tags/blog/" style="font-size: 16.67px;">blog</a><a href="/tags/ios开发/" style="font-size: 10.00px;">ios开发</a><a href="/tags/单片机/" style="font-size: 20.00px;">单片机</a><a href="/tags/嵌入式/" style="font-size: 13.33px;">嵌入式</a><a href="/tags/数据结构和算法/" style="font-size: 13.33px;">数据结构和算法</a>
+    </div>
+  </div>
+
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">Archives</h3>
+    <div class="widget">
+      <ul class="archive-list"><li class="archive-list-item"><a class="archive-list-link" href="/archives/2014/10/">October 2014</a><span class="archive-list-count">32</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2014/09/">September 2014</a><span class="archive-list-count">1</span></li></ul>
+    </div>
+  </div>
+
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">Recents</h3>
+    <div class="widget">
+      <ul>
+        
+          <li>
+            <a href="/2014/10/01/单片机学习笔记之步进电机/">单片机学习笔记之步进电机</a>
+          </li>
+        
+          <li>
+            <a href="/2014/10/01/单片机学习笔记之矩阵键盘/">单片机学习笔记之矩阵键盘</a>
+          </li>
+        
+          <li>
+            <a href="/2014/10/01/超声波模块之HC-SR04 /">超声波模块之HC-SR04</a>
+          </li>
+        
+          <li>
+            <a href="/2014/10/01/动态数码管(二) -- 数码管流水灯(不用译码器)/">动态数码管(二) -- 数码管流水等(不用译码器)</a>
+          </li>
+        
+          <li>
+            <a href="/2014/10/01/单片机学习笔记之LCD/">单片机学习笔记之LCD</a>
+          </li>
+        
+      </ul>
+    </div>
+  </div>
+
+  
+</aside>
+        
+      </div>
+      <footer id="footer">
+  
+  <div class="outer">
+    <div id="footer-info" class="inner">
+      &copy; 2014 kench<br>
+      Powered by <a href="http://hexo.io/" target="_blank">Hexo</a>
+    </div>
+  </div>
+</footer>
+    </div>
+    <nav id="mobile-nav">
+  
+    <a href="/" class="mobile-nav-link">Home</a>
+  
+    <a href="/archives" class="mobile-nav-link">Archives</a>
+  
+</nav>
+    
+
+<script src="//ajax.googleapis.com/ajax/libs/jquery/2.0.3/jquery.min.js"></script>
+
+
+  <link rel="stylesheet" href="/fancybox/jquery.fancybox.css" type="text/css">
+
+  <script src="/fancybox/jquery.fancybox.pack.js" type="text/javascript"></script>
+
+
+
+<script src="/js/script.js" type="text/javascript"></script>
+
+
+  </div>
+</body>
+</html>
